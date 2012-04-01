@@ -1,0 +1,109 @@
+<%
+
+# pull in the CGI data
+require 'cgi'
+
+class Template	
+
+	attr_accessor :title, :content, :loadData
+
+  	def initialize
+    	# property: global nav items (array containing hashes)
+    	@globalnav = [
+      		{:id => 'home', :label => 'Home', :url => 'home'},
+      		{:id => 'features', :label => 'Features', :url => 'features'},
+	  		{:id => 'pricing', :label => 'Pricing', :url => 'pricing'},
+	  		{:id => 'build', :label => 'Build a WebCard', :url => 'build'},
+	  		{:id => 'support', :label => 'Support', :url => 'support'}
+    	]
+	end
+
+	# method: output title
+	def print_title 
+    	print @title
+	end
+
+	# method: output main content
+  	def print_content
+    	print '<div id="content">', @content, '</div>'
+  	end
+
+	# method: load data file and set appropriate flags
+  	def loadData
+    	@cgi = CGI::new
+		
+    	# if a 'p' parameter was passed clean up its data
+		# and then explode the string into an array
+		# the filepath property is the array
+		unless @cgi['p']::nil? 
+     		cleaned_param = clean_data(@cgi['p'])
+      		@filepath = cleaned_param::split('-')
+			
+      		# later code assembles a file path and in cases
+      		# of an invalid 'p' value being passed there might not be 
+      		# a hyphen so this provides a second value and allows
+      		# the file path to result in a 'File Not Found'
+      		# rather than derailing Ruby with a nil for [1]
+      		if @filepath[1]::nil? then @filepath[1] = 'no' end
+    	end
+
+		# if no 'p' parameter was passed or 'p' is 'home'
+    	# you are on the home page
+    	if (@cgi['p']::empty? || @cgi['p'] == 'home') 
+			@homepage = true
+      		@validpage = true
+      		@filepath[0] = 'home'
+      		@loadData = 'indexcontent.rhtml'
+	
+		# otherwise you are on a sub page
+    	else
+    		# boolean property for tracking if you are on the home page
+      		@homepage = false
+
+      		if @filepath[0] && @filepath[1]      
+        		# this is the path to the file, based on the 'p' value
+        		# for concatenation use + rather than <<
+        		# because << in this situation edits the item to the left
+        		@loadData = @filepath[0] + '/' + @filepath[1] + '.rhtml'
+      		else 
+	        	@loadData = 'invalid'
+      		end
+
+      		# first check to see if a data file exists at that location
+      		# if it does not, load the file not found page
+      		unless File::exists? @loadData
+        		@validpage = false
+        		@filepath[0] = 'filenotfound'
+        		@loadData = 'filenotfound.rhtml'
+
+	      	# otherwise we have a valid page
+    	  	else
+        		@validpage = true
+			end
+	    end
+	end
+
+	# method: output global nav
+  	def print_globalnav
+	    print "\n\n", '<ul id="globalnav">', "\n"
+		
+		@globalnav::each do |item|
+	      	# unlink if in that section
+    	  	if @filepath[0] == item[:id]
+        		print '<li><strong>', item[:label], '</strong></li>', "\n"
+      		
+			# link page otherwise
+      		else
+	        	print '<li><a href="', item[:url], '" title="', item[:tooltip], '">', item[:label], '</a></li>', "\n"
+			end
+		end
+	    print '</ul>', "\n\n"
+	end
+
+	# method: remove any malicious characters from the GET data
+  	def clean_data(data)
+		return data::gsub(/http:|ftp:|\.|\//i,'')
+	end
+end
+
+%>
