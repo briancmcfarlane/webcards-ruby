@@ -5,27 +5,29 @@ require 'cgi'
 
 class Template	
 
-	attr_accessor :title, :content, :loadData
+	attr_accessor :title, :content, :fileName, :yr
 
   	def initialize
     	# property: global nav items (array containing hashes)
     	@globalnav = [
-      		{:id => 'home', :label => 'Home', :url => 'home'},
-      		{:id => 'features', :label => 'Features', :url => 'features'},
-	  		{:id => 'pricing', :label => 'Pricing', :url => 'pricing'},
-	  		{:id => 'build', :label => 'Build a WebCard', :url => 'build'},
-	  		{:id => 'support', :label => 'Support', :url => 'support'}
+      		{:id => 'home', :label => 'Home', :url => '.', :tabIndex => '140'},
+      		{:id => 'features', :label => 'Features', :url => 'features', :tabIndex => '150'},
+	  		{:id => 'pricing', :label => 'Pricing', :url => 'pricing', :tabIndex => '160'},
+	  		{:id => 'build', :label => 'Build a WebCard', :url => 'build', :tabIndex => '170'},
+	  		{:id => 'support', :label => 'Support', :url => 'support', :tabIndex => '190'}
     	]
 	end
 
 	# method: output title
 	def print_title 
-    	print @title
+    	print @title 
 	end
 
 	# method: output main content
   	def print_content
-    	print '<div id="content">', @content, '</div>'
+    	print "\t",'<div class="clr">&nbsp;</div>', "\n\t" ,'<div id="content"><a name="contentarea"></a>', "\n" , 
+			   @content, "\n\t" ,
+			  '<div class="clr" id="footer">All content &copy; ', @yr = find_year ,' WebCards, Inc. All Rights Reserved.</div>', "\n\t" ,'</div>'
   	end
 
 	# method: load data file and set appropriate flags
@@ -53,7 +55,7 @@ class Template
 			@homepage = true
       		@validpage = true
       		@filepath[0] = 'home'
-      		@loadData = 'indexcontent.rhtml'
+      		@fileName = 'indexcontent.rhtml'
 	
 		# otherwise you are on a sub page
     	else
@@ -64,17 +66,21 @@ class Template
         		# this is the path to the file, based on the 'p' value
         		# for concatenation use + rather than <<
         		# because << in this situation edits the item to the left
-        		@loadData = @filepath[0] + '/' + @filepath[1] + '.rhtml'
-      		else 
-	        	@loadData = 'invalid'
+      			if @filepath[1] == 'no'
+					@fileName = @filepath[0] + '.rhtml'
+				else
+					@fileName = @filepath[0] + '/' + @filepath[1] + '.rhtml'
+				end
+  			else 
+	        	@fileName = 'invalid'
       		end
 
       		# first check to see if a data file exists at that location
       		# if it does not, load the file not found page
-      		unless File::exists? @loadData
+      		unless File::exists? @fileName
         		@validpage = false
         		@filepath[0] = 'filenotfound'
-        		@loadData = 'filenotfound.rhtml'
+        		@fileName = 'filenotfound.rhtml'
 
 	      	# otherwise we have a valid page
     	  	else
@@ -85,19 +91,55 @@ class Template
 
 	# method: output global nav
   	def print_globalnav
-	    print "\n\n", '<ul id="globalnav">', "\n"
+	    print "\n\n\t", '<ul id="tnav">', "\n\t"
 		
 		@globalnav::each do |item|
 	      	# unlink if in that section
     	  	if @filepath[0] == item[:id]
-        		print '<li><strong>', item[:label], '</strong></li>', "\n"
+        		print '<li class="current"><a>', item[:label], '</a></li>', "\n\t"
       		
 			# link page otherwise
       		else
-	        	print '<li><a href="', item[:url], '" title="', item[:tooltip], '">', item[:label], '</a></li>', "\n"
+	        	print '<li><a href="', item[:url], '" tabindex="', item[:tabIndex], '">', item[:label], '</a></li>', "\n\t"
 			end
 		end
 	    print '</ul>', "\n\n"
+	end
+	
+	# method: display user info or login link
+  	def print_loginbox
+	    print "\n\t", '<div id="accountLinks">'
+		
+		# check session info and create links
+		# insert if statement to check session
+		#if 
+			# insert if statement to check if logged in user is an admin
+			#if
+				#print "\n\t", 'Welcome Admin {session[:name]}<br /><a href="/webcards/admin/admin">Admin Page</a> or <a href="/webcards/account/logout">Log Out</a>'
+			#else
+				#print "\n\t", 'Welcome {session[:name]}<br /><a href="/webcards/account/myaccount">My Account</a> or <a href="/webcards/account/logout">Log Out</a>'
+			#end
+		#else
+		    print "\n\t", '<a href="/webcards-ruby/account/login">Log-in</a> or <a href="/webcards-ruby/signup/registration">Sign up</a>'
+		#end
+		
+		print "\n\t", '</div>'
+	end
+	
+	# method: include javascript on build page
+  	def print_linkJS
+	    print '<script type="text/javascript" src="js/webcards-global.js"/></script>'
+		
+		# link build javascript
+    	if @filepath[0] == 'build'
+		    print "\n\t", '<script type="text/javascript" src="js/webcards-build.js"/></script>'
+		end
+	end
+
+	# method: find current year
+  	def find_year
+		time = Time::new
+		return time.year
 	end
 
 	# method: remove any malicious characters from the GET data

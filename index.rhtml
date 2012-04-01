@@ -3,15 +3,13 @@
 	ERuby::import('classes/Template.rhtml')
   	page = Template::new
 
-  	# set the 'loadData' parameter
+  	# set the 'fileName' parameter
   	page::loadData
 
   	# pull in the data file from the template so that
   	# the local 'page' variable in the included file is in scope
-  	ERuby::import("#{page.loadData}")  
-%>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  	ERuby::import("#{page.fileName}")  
+%><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title><% page::print_title %></title>
@@ -19,29 +17,25 @@
 	<base href="/webcards-ruby/" />
 	<link rel="stylesheet" type="text/css" href="css/screenwebcards.css" media="screen,projection" />
 	<link rel="stylesheet" type="text/css" href="css/printwebcards.css" media="print" />
+	<% page::print_linkJS %>
 </head>
 
 <body>
 	<p id="jump"><a href="#contentarea">Jump to main content</a></p>
 
 	<div id="container">
-		<h1>WebCards</h1>
-		<h2 id="tagline">An E-Card For Every Occasion</h2>
-		<%
-			# output the login box
-			#page::print_loginbox
-			
-			# output the global nav
-			page::print_globalnav
-		%>
-		<div class="clr">&nbsp;</div>
-		<div id="content"><a name="contentarea"></a>
-			<%
-				# output the 'content' property
-				page::print_content
-			%>
-			<div class="clr" id="footer">All content &copy;  WebCards, Inc. All Rights Reserved.</div>
-		</div>
+	<h1>WebCards</h1>
+	<h2 id="tagline">An E-Card For Every Occasion</h2>
+	<%
+		# output the login box
+		page::print_loginbox
+		
+		# output the global nav
+		page::print_globalnav
+
+		# output the 'content' property
+		page::print_content
+	%>		
 	</div>
 </body>
 </html>
