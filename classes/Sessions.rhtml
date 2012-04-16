@@ -1,0 +1,64 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+
+class Sessions
+
+	#creates a session by creating a cookie with a unique id (timestamp) and creates a file that will
+	#hold session information as a serialized hash
+	def createSession
+		 ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+		 id = Time::new.to_i.to_s
+		 r = Apache.request
+		 r.content_type = 'text/html'
+		 r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~sshaper/; expires=#{ed}")
+		 r.send_http_header
+		 
+		 File::open("temp_files/#{id}.txt",'w')
+		 
+ 	end
+ 	
+ 	#deletes the file and cookie that is used for the current session.
+ 	def deleteSession(file)
+ 		ed = CGI.rfc1123_date(Time.now - (60 * 60 * 24))
+		 id = Time::new.to_i.to_s
+		 r = Apache.request
+		 r.content_type = 'text/html'
+		 r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~sshaper/; expires=#{ed}")
+		 r.send_http_header
+		 
+		 File.delete(file)
+ 	
+ 	end
+	
+	#returns the cookieId which is also the file id
+	def getCookieId
+		cgi = CGI::new
+		id = cgi::cookies['RUBYSESSION'].value.untaint
+		return id
+	end
+	
+	
+	#returns the file path for the current session
+	def getFilePath
+		cgi = CGI::new
+		id = cgi::cookies['RUBYSESSION'].value.untaint
+		filePath = "temp_files/#{id}.txt"
+		filePath.untaint
+		return filePath
+	end
+	
+	#takes the filePath and hash and serializes it to the file
+	#this is what saves your session information	
+	def serializeHash(filePath,hash)
+		File.open("#{filePath}", "wb") {|f| Marshal.dump(hash, f)}
+	end
+	
+	#reads the file and returns a hash of the contents. NOTE: The file read must be in 
+	#serialized format
+	def unserializeHash(filePath)
+		return File.open("#{filePath}", "rb") {|f| Marshal.load(f)}
+	end
+
+end
+%>
