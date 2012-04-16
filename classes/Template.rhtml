@@ -10,11 +10,11 @@ class Template
   	def initialize
     	# property: global nav items (array containing hashes)
     	@globalnav = [
-      		{:id => 'home', :label => 'Home', :url => '.', :tabIndex => '140'},
-      		{:id => 'features', :label => 'Features', :url => 'features', :tabIndex => '150'},
-	  		{:id => 'pricing', :label => 'Pricing', :url => 'pricing', :tabIndex => '160'},
-	  		{:id => 'build', :label => 'Build a WebCard', :url => 'build', :tabIndex => '170'},
-	  		{:id => 'support', :label => 'Support', :url => 'support', :tabIndex => '190'}
+    		{:id => 'home', :label => 'Home', :url => '.', :tabIndex => '140'},
+    		{:id => 'features', :label => 'Features', :url => 'index.rhtml?p=features', :tabIndex => '150'},
+	  		{:id => 'pricing', :label => 'Pricing', :url => 'index.rhtml?p=pricing', :tabIndex => '160'},
+	  		{:id => 'build', :label => 'Build a WebCard', :url => 'index.rhtml?p=build', :tabIndex => '170'},
+	  		{:id => 'support', :label => 'Support', :url => 'index.rhtml?p=support', :tabIndex => '190'}
     	]
 	end
 
@@ -40,7 +40,7 @@ class Template
 		unless @cgi['p']::nil? 
      		cleaned_param = clean_data(@cgi['p'])
       		@filepath = cleaned_param::split('-')
-			
+
       		# later code assembles a file path and in cases
       		# of an invalid 'p' value being passed there might not be 
       		# a hyphen so this provides a second value and allows
@@ -68,8 +68,10 @@ class Template
         		# because << in this situation edits the item to the left
       			if @filepath[1] == 'no'
 					@fileName = @filepath[0] + '.rhtml'
+          @fileName.untaint
 				else
 					@fileName = @filepath[0] + '/' + @filepath[1] + '.rhtml'
+          @fileName.untaint
 				end
   			else 
 	        	@fileName = 'invalid'
@@ -81,6 +83,7 @@ class Template
         		@validpage = false
         		@filepath[0] = 'filenotfound'
         		@fileName = 'filenotfound.rhtml'
+          @fileName.untaint
 
 	      	# otherwise we have a valid page
     	  	else

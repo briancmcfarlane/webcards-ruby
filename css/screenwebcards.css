@@ -275,7 +275,15 @@ border: 3px solid #00A6F0;
 }
 
 /*preview css*/
-#democard {font-size: 90%; line-height: 1.4; padding-top: 100px; height: 290px; width: 400px; border: 1px solid #000; overflow: hidden;}
+#democard {
+  /*font-size: 90%;*/
+  /*line-height: 1.4;*/
+  padding-top: 100px;
+  height: 290px;
+  /*width: 400px;*/
+  border: 1px solid #999;
+  overflow: hidden;
+}
 .sans {font-family: verdana,geneva,lucida,arial,sans-serif;}
 .serif {font-family: georgia,serif;}
 .fun {font-family: "comic sans ms",fantasy;}

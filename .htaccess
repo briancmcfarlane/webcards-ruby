@@ -8,7 +8,7 @@ DirectoryIndex index.rhtml
 RewriteRule \.(css|jpeg|jpg|gif|png|js|html|xml|pdf|doc|xls|ppt|docx|xsl)$ - [L]
 
 # remap paths with 2 parts to them
-RewriteRule ^([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$ index.rhtml?p=$1-$2 [L]
+# RewriteRule ^([A-Za-z0-9-]+)/([A-Za-z0-9-]+)/?$ index.rhtml?p=$1-$2 [L]
 
 # remap paths with 1 part only
-RewriteRule ^([A-Za-z0-9-]+)/?$ index.rhtml?p=$1 [L]
+# RewriteRule ^([A-Za-z0-9-]+)/?$ index.rhtml?p=$1 [L]
