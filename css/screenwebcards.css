@@ -58,7 +58,7 @@ font-size: 90%;
   border: none;
   text-align: right;
   color: #555;
-  padding: none;
+  padding: 0;
 }
 .serif {
 font-family: georgia,serif;
@@ -273,3 +273,18 @@ border: 3px solid #00A6F0;
 #delMsg{
   margin:15px 275px;
 }
+
+/*preview css*/
+#democard {font-size: 90%; line-height: 1.4; padding-top: 100px; height: 290px; width: 400px; border: 1px solid #000; overflow: hidden;}
+.sans {font-family: verdana,geneva,lucida,arial,sans-serif;}
+.serif {font-family: georgia,serif;}
+.fun {font-family: "comic sans ms",fantasy;}
+.dentistA {background: url(../images/theme-dentist-a.png) top left repeat-x;}
+.dentistB {background: url(../images/theme-dentist-b.png) top left repeat-x;}
+.houseA {background: url(../images/theme-house-a.png) top left repeat-x;}
+.houseB {background: url(../images/theme-house-b.png) top left repeat-x;}
+.vetA {background: url(../images/theme-pet-a.png) top left repeat-x;}
+.vetB {background: url(../images/theme-pet-b.png) top left repeat-x;}
+.vdA {background: url(../images/theme-vd-a.png) top left repeat-x;}
+.vdB {background: url(../images/theme-vd-b.png) top left repeat-x;}
+#democard p {margin-left: 15px;}
