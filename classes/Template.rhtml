@@ -26,8 +26,8 @@ class Template
 	# method: output main content
   	def print_content
     	print "\t",'<div class="clr">&nbsp;</div>', "\n\t" ,'<div id="content"><a name="contentarea"></a>', "\n" , 
-			   @content, "\n\t" ,
-			  '<div class="clr" id="footer">All content &copy; ', @yr = find_year ,' WebCards, Inc. All Rights Reserved.</div>', "\n\t" ,'</div>'
+        @content, "\n\t" ,
+        '<div class="clr" id="footer">All content &copy; ', @yr = find_year ,' WebCards, Inc. All Rights Reserved.</div>', "\n\t" ,'</div>'
   	end
 
 	# method: load data file and set appropriate flags
@@ -68,10 +68,10 @@ class Template
         		# because << in this situation edits the item to the left
       			if @filepath[1] == 'no'
 					@fileName = @filepath[0] + '.rhtml'
-          @fileName.untaint
+                    @fileName.untaint
 				else
 					@fileName = @filepath[0] + '/' + @filepath[1] + '.rhtml'
-          @fileName.untaint
+                    @fileName.untaint
 				end
   			else 
 	        	@fileName = 'invalid'
@@ -83,7 +83,7 @@ class Template
         		@validpage = false
         		@filepath[0] = 'filenotfound'
         		@fileName = 'filenotfound.rhtml'
-          @fileName.untaint
+                @fileName.untaint
 
 	      	# otherwise we have a valid page
     	  	else
