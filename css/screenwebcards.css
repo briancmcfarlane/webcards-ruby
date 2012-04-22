@@ -275,24 +275,66 @@ border: 3px solid #00A6F0;
 }
 
 /*preview css*/
+#democard, #stylecard {
+  margin-top: 1em;
+}
+
 #democard {
-  /*font-size: 90%;*/
-  /*line-height: 1.4;*/
   padding-top: 100px;
-  height: 290px;
-  /*width: 400px;*/
+  height: 300px;
   border: 1px solid #999;
   overflow: hidden;
+  float: left;
+  width: 400px;
 }
-.sans {font-family: verdana,geneva,lucida,arial,sans-serif;}
-.serif {font-family: georgia,serif;}
-.fun {font-family: "comic sans ms",fantasy;}
-.dentistA {background: url(../images/theme-dentist-a.png) top left repeat-x;}
-.dentistB {background: url(../images/theme-dentist-b.png) top left repeat-x;}
-.houseA {background: url(../images/theme-house-a.png) top left repeat-x;}
-.houseB {background: url(../images/theme-house-b.png) top left repeat-x;}
-.vetA {background: url(../images/theme-pet-a.png) top left repeat-x;}
-.vetB {background: url(../images/theme-pet-b.png) top left repeat-x;}
-.vdA {background: url(../images/theme-vd-a.png) top left repeat-x;}
-.vdB {background: url(../images/theme-vd-b.png) top left repeat-x;}
-#democard p {margin-left: 15px;}
+#democard p {
+  margin-left: 1em;
+}
+
+#stylecard {
+  float: left;
+  width: 300px;
+}
+#content #stylecard label {
+  display: block;
+  float: none;
+  text-align: left;
+  margin: .2em 0 1em 0;
+  font-weight: bold;
+  color: #999;
+}
+
+/*preview styles*/
+.sans {
+  font-family: verdana,geneva,lucida,arial,sans-serif;
+}
+.serif {
+  font-family: georgia,serif;
+}
+.fun {
+  font-family: "comic sans ms",fantasy;
+}
+.dentistA {
+  background: url(../images/theme-dentist-a.png) top left repeat-x;
+}
+.dentistB {
+  background: url(../images/theme-dentist-b.png) top left repeat-x;
+}
+.houseA {
+  background: url(../images/theme-house-a.png) top left repeat-x;
+}
+.houseB {
+  background: url(../images/theme-house-b.png) top left repeat-x;
+}
+.vetA {
+  background: url(../images/theme-pet-a.png) top left repeat-x;
+}
+.vetB {
+  background: url(../images/theme-pet-b.png) top left repeat-x;
+}
+.vdA {
+  background: url(../images/theme-vd-a.png) top left repeat-x;
+}
+.vdB {
+  background: url(../images/theme-vd-b.png) top left repeat-x;
+}
