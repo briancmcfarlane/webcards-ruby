@@ -1,7 +1,7 @@
 var wc_build = {
 
   // object reference to the form holding the build fields
-  theForm : document.getElementById('counter'),
+  theForm : null,
 
   // labels collection
   theLabels : null,
@@ -27,9 +27,15 @@ var wc_build = {
   // properties/object references for font settings
   theFonts : null,
   allFonts : null,
+  chosenFont : null,
   
   //preset demo card
   theDemoCard : null,
+  
+  //flags to determine if an input is valid
+  validRecipient : true,
+  validTextArea: true,
+  validSender : true,
   
   init : function() {
 
@@ -37,60 +43,37 @@ var wc_build = {
      wc_build.theForm = wc_global.getObj('buildForm');
      wc_build.theLabels = document.getElementsByTagName('label');
      wc_build.theCounter = wc_global.getObj('counter');
-     wc_build.theTextArea = wc_global.getObj('msg');
-     wc_build.theRecipient = wc_global.getObj('recip');
-     wc_build.theSender = wc_global.getObj('sender');
+     wc_build.theTextArea = wc_global.getObj('demo_msg');
+     wc_build.theRecipient = wc_global.getObj('demo_recip');
+     wc_build.theSender = wc_global.getObj('demo_sender');
      wc_build.saveBtn = wc_global.getObj('save');
      wc_build.borderImgs = document.getElementsByTagName('img');
      wc_build.allBorderImgs = wc_build.borderImgs.length;
      wc_build.theFonts = document.getElementsByName('txtstyle');
      wc_build.allFonts = wc_build.theFonts.length;
      wc_build.theDemoCard = wc_global.getObj('democard');
+     wc_build.editBtn = wc_global.getObj('editCard');
      
      //set the default border image
      wc_build.chosenBorderImg = 'Dentist Appt. A Border Image';
+     
+     //set default font
+     wc_build.chosenFont = 'fun';
 
      // launching configuration functions
-     wc_build.configCounter();
      wc_build.configImgs();
      wc_build.configSaveBtn();
-     wc_build.configTextInputs();
      wc_build.configRadioBtns();
-  },
-
-  // assign event handler to textarea
-  configCounter : function() {
-     wc_global.addEvent(this.theTextArea, 'keyup', wc_build.updateCounter);
-  },
-  
-  configTextInputs : function(){
-      wc_global.addEvent(this.theRecipient, 'keyup', wc_build.setDemoCard);
-      wc_global.addEvent(this.theSender, 'keyup', wc_build.setDemoCard);
+     wc_build.configDemoInputs();
   },
   
   configRadioBtns : function(){
       
     for (var i=0; i<wc_build.allFonts; i++) {
-        wc_global.addEvent(wc_build.theFonts[i], 'click', wc_build.setDemoCard);
+        wc_global.addEvent(wc_build.theFonts[i], 'click', wc_build.setBorderAndFont);
     }
       
       
-  },
-
-  // update character count based on textarea data 
-  updateCounter : function() {
-     var totalCharacters = 300 - this.value.length;
-     if (totalCharacters < 0) {
-        totalCharacters = 'over';
-        wc_build.theCounter.className = 'overLimit';
-	wc_build.saveBtn.disabled = true;
-     }
-     else {
-        wc_build.theCounter.className = '';
-	wc_build.saveBtn.disabled = false;
-     }
-     wc_build.theCounter.value = totalCharacters;
-     wc_build.setDemoCard();
   },
   
   // assign event handlers to links surrounding border images
@@ -98,6 +81,133 @@ var wc_build = {
      for (var i=0; i<this.allBorderImgs; i++) {
          wc_global.addEvent(this.borderImgs[i].parentNode, 'click', this.addImgBorder);
      }
+  },
+  
+  configDemoInputs : function(){
+    
+    wc_global.addEvent(this.editBtn, 'click', this.startOrStopEdit);
+  
+  },
+  
+  startOrStopEdit : function(){
+    
+    //shortcut to the card
+    var theCard = wc_build.theDemoCard;
+    
+    if (this.value === "Edit Card"){
+        
+        //grab the text from the paragraphs and put it into variables
+        var recipientText = wc_build.theRecipient.firstChild.data;
+        var messageText = wc_build.theTextArea.firstChild.data;
+        var senderText = wc_build.theSender.firstChild.data;
+        
+        //create the inputs, and set attributes/styles
+        var recipientInput = document.createElement('input');
+            recipientInput.type = 'text';
+            recipientInput.id = 'recipientInput';
+            recipientInput.style.display = 'block';
+            recipientInput.value = recipientText;
+            recipientInput.size = '30';
+            recipientInput.style.margin = '0 0 0 1em';
+            
+        var messageInput = document.createElement('textarea');
+            messageInput.appendChild(document.createTextNode(messageText));
+            messageInput.id = 'messageInput';
+            messageInput.rows = '7';
+            messageInput.style.margin = '10px 0 10px 1em';
+            
+        var senderInput = document.createElement('input');
+            senderInput.type = 'text';
+            senderInput.id = 'senderInput';
+            senderInput.style.display = 'block';
+            senderInput.value = senderText;
+            senderInput.size = '30';
+            senderInput.style.margin = '0 0 0 1em';
+
+        //hide the paragraphs
+        wc_build.theRecipient.hidden = true;
+        wc_build.theTextArea.hidden = true;
+        wc_build.theSender.hidden = true;
+        
+        //append the inputs to the card
+        theCard.appendChild(recipientInput);
+        theCard.appendChild(messageInput);
+        theCard.appendChild(senderInput);
+        
+        //alter the text of the edit card button
+        this.value = "Save Changes";
+        
+        //disable the save button, so they cant save the card mid change
+        wc_build.saveBtn.disabled = true;
+    }
+    
+    else {
+        //change the value on the edit card button back to the original text
+        this.value = "Edit Card";
+        
+        //grab the inputs, and set their values to variables
+        var recipientInput = document.getElementById('recipientInput');
+        var recipientInputText = recipientInput.value;
+        
+        var messageInput = document.getElementById('messageInput');
+        var messageInputText = messageInput.value;
+        
+        var senderInput = document.getElementById('senderInput');
+        var senderInputText = senderInput.value;
+        
+        //remove the inputs from the card
+        theCard.removeChild(recipientInput);
+        theCard.removeChild(messageInput);
+        theCard.removeChild(senderInput);
+        
+        //re-enable the save button
+        wc_build.saveBtn.disabled = false;
+        
+        //set the new text to the paragraphs
+        wc_build.theRecipient.firstChild.data = recipientInputText;
+        wc_build.theTextArea.firstChild.data = messageInputText;
+        wc_build.theSender.firstChild.data = senderInputText;
+        
+        //determine if the data is valid, setting flags and classes if not
+        if (wc_build.theRecipient.firstChild.data === '' || wc_build.theRecipient.firstChild.data === 'Enter a recipient'){
+            wc_build.validRecipient = false;
+            wc_build.theRecipient.firstChild.data = 'Enter a recipient';
+            wc_build.theRecipient.className = 'error';
+        }
+        else {
+            wc_build.validRecipient = true;
+            wc_build.theRecipient.className = '';
+        }
+        
+        if (wc_build.theTextArea.firstChild.data === '' || wc_build.theTextArea.firstChild.data === 'Enter a message'){
+            wc_build.validTextArea = false;
+            wc_build.theTextArea.firstChild.data = 'Enter a message';
+            wc_build.theTextArea.className = 'error';
+        }
+        else {
+            wc_build.validTextArea = true;
+            wc_build.theTextArea.className = '';
+        }
+        
+        if (wc_build.theSender.firstChild.data === '' || wc_build.theSender.firstChild.data === 'Enter your name'){
+            wc_build.validSender = false;
+            wc_build.theSender.firstChild.data = 'Enter your name';
+            wc_build.theSender.className = 'error';
+        }
+        else{
+            wc_build.validSender = true;
+            wc_build.theSender.className = '';
+        }
+        
+        //display the paragraphs again
+        wc_build.theRecipient.hidden = false;
+        wc_build.theTextArea.hidden = false;
+        wc_build.theSender.hidden = false;
+        
+        
+    }
+    
+
   },
   
   // toggle off all image outset borders and then toggle on the border for the clicked image 
@@ -108,19 +218,15 @@ var wc_build = {
      this.firstChild.className = 'imgBorder';
      wc_build.chosenBorderImg = this.firstChild.getAttribute('alt');
      wc_build.stopDefault(e);
-     wc_build.setDemoCard();
+     wc_build.setBorderAndFont();
   },
   
-  setDemoCard : function(){
+  setBorderAndFont : function(){
       
      var democard = wc_global.getObj('democard')
      var borderToSet = null;
      var fontToSet = null;
      var completeClassName = null;
-     
-     var demoRecip = wc_global.getObj('demo_recip');
-     var demoMsg = wc_global.getObj('demo_msg');
-     var demoSender = wc_global.getObj('demo_sender');
       
      switch (wc_build.chosenBorderImg) {
         case "Dentist Appt. A Border Image" :borderToSet = 'dentistA';break;
@@ -136,6 +242,7 @@ var wc_build = {
      for (var i=0; i<wc_build.allFonts; i++) {
          if (wc_build.theFonts[i].checked == true) {
             fontToSet = wc_build.theFonts[i].value;
+            wc_build.chosenFont = wc_build.theFonts[i].value;
             wc_build.theLabels[0].className = '';
          }
      }
@@ -144,12 +251,6 @@ var wc_build = {
      
      democard.className = completeClassName;
      
-     demoRecip.firstChild.data = wc_build.theRecipient.value;
-     
-     demoMsg.firstChild.data = wc_build.theTextArea.value;
-
-     demoSender.firstChild.data = wc_build.theSender.value;
-     
   },
 
   configSaveBtn : function() { 
@@ -157,53 +258,13 @@ var wc_build = {
   },
   
   // checking for proper data existence
-  validateSelections : function() {
-     
-     // font choice validation
-     if (!wc_build.fontIsSelected) {wc_build.theLabels[0].className = 'error';}
-     for (var i=0; i<wc_build.allFonts; i++) {
-         if (wc_build.theFonts[i].checked == true) {
-            var chosenFont = wc_build.theFonts[i].value;
-            wc_build.theLabels[0].className = '';
-         }
-     }
-     
-     // border image validation
-     if (!wc_build.chosenBorderImg) {wc_build.theLabels[1].className = 'error';}
-     else {wc_build.theLabels[1].className = '';}
-
-     // recipient validation     
-     if (wc_build.theRecipient.value != '') { 
-         var validRecipient = true; 
-         wc_build.theLabels[2].className = '';
-     }
-     else {wc_build.theLabels[2].className = 'error';}     
-     
-     // message validation
-     if (wc_build.theTextArea.value != '') { 
-        var validTextArea = true;
-        wc_build.theLabels[3].className = '';
-     }
-     else {wc_build.theLabels[3].className = 'error';}
-     
-     // sender validation     
-     if (wc_build.theSender.value != '') { 
-         var validSender = true; 
-         wc_build.theLabels[4].className = '';
-     }
-     else {wc_build.theLabels[4].className = 'error';}         
+  validateSelections : function() {   
      
      // final check
-     if (chosenFont && wc_build.chosenBorderImg && validRecipient && validTextArea && validSender) {
+     if (wc_build.validRecipient && wc_build.validTextArea && wc_build.validSender) {
         if (document.getElementById('errorMessage')) {
            wc_build.theForm.removeChild(document.getElementById('errorMessage'));
         }
-        wc_build.createCookie('font', chosenFont);
-        wc_build.createCookie('border', wc_build.chosenBorderImg);
-        wc_build.createCookie('recipient', wc_build.theRecipient.value);
-        wc_build.createCookie('message', wc_build.theTextArea.value);
-        wc_build.createCookie('sender', wc_build.theSender.value);
-        wc_build.createCookie('save', true);
 	
 	window.location.reload();
 		
