@@ -123,7 +123,7 @@ class Template
 				#print "\n\t", 'Welcome {session[:name]}<br /><a href="/webcards/account/myaccount">My Account</a> or <a href="/webcards/account/logout">Log Out</a>'
 			#end
 		#else
-		    print "\n\t", '<a href="/webcards-ruby/account/login">Log-in</a> or <a href="/webcards-ruby/signup/registration">Sign up</a>'
+		    print "\n\t", '<a href="index.rhtml?p=login">Log-in</a> or <a href="index.rhtml?p=registration">Sign up</a>'
 		#end
 		
 		print "\n\t", '</div>'
