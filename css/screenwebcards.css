@@ -12,7 +12,7 @@ body {
 text-align: center;
 background: #00A6F0;
 color: #555;
-margin-top: 3em;
+margin: 3em 0 3em;
 }
 #jump {
 position: absolute;
