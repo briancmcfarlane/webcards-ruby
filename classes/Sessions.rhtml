@@ -7,29 +7,36 @@ class Sessions
 	#creates a session by creating a cookie with a unique id (timestamp) and creates a file that will
 	#hold session information as a serialized hash
 	def createSession
-		 ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
-		 id = Time::new.to_i.to_s
-		 r = Apache.request
-		 r.content_type = 'text/html'
-		 #Change path to your directory
-		 r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
-		 r.send_http_header
+        cgi = CGI::new
+        if (cgi.cookies().key?("RUBYSESSION"))
+            id = cgi.cookies()["RUBYSESSION"].value.untaint
+        else
+            id = Time::new.to_i.to_s
+        end
+		ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+		r = Apache.request
+		r.content_type = 'text/html'
+		#Change path to your directory
+		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
+		r.send_http_header
+        filePath = "temp_files/#{id}.txt"
+        filePath.untaint
 		 
-		 File::open("temp_files/#{id}.txt",'w')
+		File::open(filePath,'w')
 		 
  	end
  	
  	#deletes the file and cookie that is used for the current session.
  	def deleteSession(file)
  		ed = CGI.rfc1123_date(Time.now - (60 * 60 * 24))
-		 id = Time::new.to_i.to_s
-		 r = Apache.request
-		 r.content_type = 'text/html'
-		 #Change path to your directory
-		 r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
-		 r.send_http_header
+		id = Time::new.to_i.to_s
+		r = Apache.request
+		r.content_type = 'text/html'
+		#Change path to your directory
+		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
+		r.send_http_header
 		 
-		 File.delete(file)
+		File.delete(file)
  	
  	end
 	

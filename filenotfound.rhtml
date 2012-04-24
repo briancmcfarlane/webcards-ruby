@@ -1,5 +1,7 @@
 <%
-
+ ERuby::import('classes/Sessions.rhtml')
+ sess = Sessions::new
+ sess::createSession
 page.title = <<_PAGETITLE_
     WebCards: 404 file not found
 _PAGETITLE_
