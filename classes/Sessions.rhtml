@@ -10,19 +10,25 @@ class Sessions
         cgi = CGI::new
         if (cgi.cookies().key?("RUBYSESSION"))
             id = cgi.cookies()["RUBYSESSION"].value.untaint
+            filePath = "temp_files/#{id}.txt"
+            filePath.untaint
         else
             id = Time::new.to_i.to_s
+            filePath = "temp_files/#{id}.txt"
+            filePath.untaint
+            #set up a base hash for the session, auth becomes y after login
+            hash = {}
+            hash['auth'] = 'n'
+            #serialize the hash
+            self::serializeHash(filePath, hash)
         end
+        
 		ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
 		r = Apache.request
 		r.content_type = 'text/html'
 		#Change path to your directory
 		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
 		r.send_http_header
-        filePath = "temp_files/#{id}.txt"
-        filePath.untaint
-		 
-		File::open(filePath,'w')
 		 
  	end
  	
@@ -35,7 +41,7 @@ class Sessions
 		#Change path to your directory
 		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
 		r.send_http_header
-		 
+		
 		File.delete(file)
  	
  	end
@@ -68,6 +74,14 @@ class Sessions
 	def unserializeHash(filePath)
 		return File.open("#{filePath}", "rb") {|f| Marshal.load(f)}
 	end
+    
+    def validateLogin(filePath)
+        cgi = CGI::new
+        hash = self::unserializeHash(filePath)
+        if (hash['auth'] = 'n')
+            cgi.header('location'=>"index.rhtml?p=registration")
+        end
+    end
 
 end
 %>
