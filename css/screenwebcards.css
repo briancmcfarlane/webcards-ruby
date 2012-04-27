@@ -290,6 +290,9 @@ border: 3px solid #00A6F0;
 #democard p {
   margin-left: 1em;
 }
+#democard.preview {
+  width: 100%;
+}
 
 #stylecard {
   float: left;

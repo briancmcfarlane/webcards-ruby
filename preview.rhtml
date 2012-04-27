@@ -1,0 +1,23 @@
+<%
+ ERuby::import('classes/Sessions.rhtml')
+ sess = Sessions::new
+ sess::createSession
+
+page.title = <<_PAGETITLE_
+    WebCards: Preview
+_PAGETITLE_
+
+page.content = <<_PAGECONTENT_
+    <div id="democard" class="fun dentistA preview">
+        
+        <p id="demo_recip">This is who I'm sending the card to.</p>
+        
+        <p id="demo_msg">This is what I want to say.</p>
+        
+        <p id="demo_sender">This is me!</p>
+    
+    </div>
+    <div id="home-cta"><a href="index.rhtml?p=registration">Sign Up For WebCards Today!</a></div>
+_PAGECONTENT_
+
+%>
