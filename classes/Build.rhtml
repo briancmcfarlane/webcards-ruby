@@ -1,0 +1,18 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+
+class Build
+
+    def setSaveBtnText(filePath)
+        hash = File.open("#{filePath}", "rb") {|f| Marshal.load(f)}
+        if (hash['auth'] == 'y')
+            return "Save Card"
+        else
+            return "Save and Create Account"
+        end
+    end
+    
+end
+
+%>

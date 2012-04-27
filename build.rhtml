@@ -1,7 +1,12 @@
 <%
+
  ERuby::import('classes/Sessions.rhtml')
+ ERuby::import('classes/Build.rhtml')
  sess = Sessions::new
  sess::createSession
+ filePath = sess::getFilePath
+ 
+ build = Build::new
  
 page.title = <<_PAGETITLE_
     WebCards: Build a WebCard
@@ -64,7 +69,7 @@ page.content = <<_PAGECONTENT_
         </div>
 
         <input type="button" id="editCard" name="editCard" value ="Edit Card" tabindex="140"/>
-        <input type="button" id="save" name="save" value="Save and Create Account" tabindex="150"/>
+        <input type="button" id="save" name="save" value="#{build::setSaveBtnText(filePath)}" tabindex="150"/>
     </form>
 _PAGECONTENT_
 

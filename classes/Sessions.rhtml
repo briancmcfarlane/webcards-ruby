@@ -78,8 +78,8 @@ class Sessions
     def validateLogin(filePath)
         cgi = CGI::new
         hash = self::unserializeHash(filePath)
-        if (hash['auth'] = 'n')
-            cgi.header('location'=>"index.rhtml?p=registration")
+        if (hash['auth'] == 'n')
+            cgi.header('location'=>"index.rhtml?p=login")
         end
     end
 
