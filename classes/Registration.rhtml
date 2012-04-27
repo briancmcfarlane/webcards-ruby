@@ -1,0 +1,73 @@
+<%
+
+# pull in the CGI data
+require 'cgi'
+
+
+class Registration
+
+        attr_accessor :errorMsg, :acctGood
+
+       def initialize
+
+         @errorMsg = ' '
+         @acctGood = 'false'
+         @cgi = CGI::new
+        
+       end
+
+        def createAccount
+
+          #sess = Sessions::new
+          
+
+          uName = @cgi['name']
+          email = @cgi['email']
+          pw = @cgi['password']
+
+          hashedPW = Digest::SHA1.hexdigest(pw)
+          plan = @cgi['plan']
+          accounthash = {}
+          accounthash[email] = hashedPW, uName, plan, 'f'
+          
+          File.open("data/acct.txt", "wb") {|f| Marshal.dump(accounthash, f)}
+          @acctGood = 'true'
+        end
+
+        def checkAccounts
+          account_hash = File.open("data/acct.txt", "rb") {|f| Marshal.load(f)}
+          #msg = ''
+          if (account_hash.has_key?(@cgi['email']))
+
+            @errorMsg = 'Email already in use'
+            return 'true'
+          else
+            return 'false'
+          end
+        end
+
+        def redirect
+          redirect = ''
+          if (@acctGood == 'true')
+            redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=success'</script>"
+            #redirect =   cgi.header('location'=>"index.rhtml?p=success")
+          else
+            redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=registration'</script>"
+            #redirect =   cgi.header('location'=>"index.rhtml?p=registration")
+              
+          end
+
+          print redirect
+        end
+
+        def printError
+            return '<p>'+ @errorMsg + '</p>'
+        end
+
+
+  	def cleanData(data)
+		return data::gsub(/http:|ftp:|\.|\//i,'')
+	end
+end
+
+%>

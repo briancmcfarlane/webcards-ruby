@@ -1,0 +1,59 @@
+<%
+
+# pull in the CGI data
+require 'cgi'
+
+
+class Login
+
+       attr_accessor :errorMsg, :loginGood
+
+       def initialize
+
+         @errorMsg = ' '
+         @loginGood = 'false'
+         @cgi = CGI::new
+
+       end
+
+      def checkLogin
+        
+        if (@cgi['email']!="" && @cgi['passwd']!="")
+            account_hash = File.open("data/acct.txt", "rb") {|f| Marshal.load(f)}
+                if (account_hash.has_key?(@cgi['email']))
+                         hashedPW = Digest::SHA1.hexdigest(@cgi['passwd'])
+			if (account_hash[@cgi['email']][0] == hashedPW)
+                            @loginGood = 'true'
+                        end
+                else
+                  @errorMsg = 'Username and Password Not Found'
+                end
+        else
+           @errorMsg = 'Please Enter a Username and Password'
+        end
+      end
+
+
+      def redirect
+          redirect = ''
+          if (@loginGood == 'true')
+            #redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=loginsuccess'</script>"
+            redirect =   @cgi.header('location'=>"index.rhtml?p=loginsuccess")
+          else
+            #redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=login'</script>"
+            redirect =   @cgi.header('location'=>"index.rhtml?p=login")
+
+          end
+
+          print redirect
+      end
+
+
+
+
+
+
+
+
+end
+%>
