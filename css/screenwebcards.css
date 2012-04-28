@@ -38,6 +38,12 @@ margin: 1em 0;
 font-size: 80%;
 text-transform: lowercase;
 }
+#logo a {
+text-decoration: none;
+}
+#logo h1:hover {
+text-shadow: .1em 0 .1em #d3d3d3;
+}
 h2 {
 font-weight: bold;
 color: #999;

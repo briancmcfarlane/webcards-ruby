@@ -14,7 +14,7 @@
 <head>
 	<title><% page::print_title %></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<base href="/~skrumrei/webcards-ruby/" />
+	<base href="/~bmcfarlane/webcards-ruby/" />
 	<link rel="stylesheet" type="text/css" href="css/screenwebcards.css" media="screen,projection" />
 	<link rel="stylesheet" type="text/css" href="css/printwebcards.css" media="print" />
 	<% page::print_linkJS %>
@@ -24,8 +24,12 @@
 	<p id="jump"><a href="#contentarea">Jump to main content</a></p>
 
 	<div id="container">
-	<h1>WebCards</h1>
-	<h2 id="tagline">An E-Card For Every Occasion</h2>
+    <div id="logo">
+        <a href="./">
+        	<h1>WebCards</h1>
+        	<h2 id="tagline">An E-Card For Every Occasion</h2>
+        </a>
+    </div>
 	<%
 		# output the login box
 		page::print_loginbox
