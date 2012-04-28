@@ -4,7 +4,7 @@ margin: 0;
 padding: 0;
 }
 table {
-  border-collapse: collapse;
+border-collapse: collapse;
 }
 body {
 text-align: center;
@@ -59,10 +59,10 @@ font-size: 100%;
 font-size: 90%;
 }
 #counter {
-  border: none;
-  text-align: right;
-  color: #555;
-  padding: 0;
+border: none;
+text-align: right;
+color: #555;
+padding: 0;
 }
 .serif {
 font-family: georgia,serif;
@@ -182,21 +182,21 @@ font-weight: bold;
 color: #777;
 }
 table {
-  width: 100%;
+width: 100%;
 }
 th,td {
-  padding: .5em 1em;
-  border: 1px solid #999;
+padding: .5em 1em;
+border: 1px solid #999;
 }
 th {
-  background: #00A6F0;
-  color: #fff;
-  border-color: #00A6F0;
-  text-align: center;
-  text-transform: uppercase;
+background: #00A6F0;
+color: #fff;
+border-color: #00A6F0;
+text-align: center;
+text-transform: uppercase;
 }
 #footer {
-  margin: 1em 0;
+margin: 1em 0;
 }
 #pwd-link {
 display: block;
@@ -272,76 +272,76 @@ color: #fff;
 border: 3px solid #00A6F0;
 }
 #editUser{
-  margin:15px 300px;
+margin:15px 300px;
 }
 #delMsg{
-  margin:15px 275px;
+margin:15px 275px;
 }
 
 /*preview css*/
 #democard, #stylecard {
-  margin-top: 1em;
+margin-top: 1em;
 }
 #democard {
-  padding-top: 100px;
-  height: 300px;
-  border: 1px solid #999;
-  overflow: hidden;
-  float: left;
-  width: 400px;
+padding-top: 100px;
+height: 300px;
+border: 1px solid #999;
+overflow: hidden;
+float: left;
+width: 400px;
 }
 #democard p {
-  margin-left: 1em;
+margin-left: 1em;
 }
 #democard.preview {
-  width: 100%;
+width: 100%;
 }
 
 #stylecard {
-  float: left;
-  width: 300px;
+float: left;
+width: 300px;
 }
 #content #stylecard label {
-  display: block;
-  float: none;
-  text-align: left;
-  margin: .2em 0 1em 0;
-  font-weight: bold;
-  font-size: 110%;
-  color: #777;
+display: block;
+float: none;
+text-align: left;
+margin: .2em 0 1em 0;
+font-weight: bold;
+font-size: 110%;
+color: #777;
 }
 
 /*preview styles*/
 .sans {
-  font-family: verdana,geneva,lucida,arial,sans-serif;
+font-family: verdana,geneva,lucida,arial,sans-serif;
 }
 .serif {
-  font-family: georgia,serif;
+font-family: georgia,serif;
 }
 .fun {
-  font-family: "comic sans ms",fantasy;
+font-family: "comic sans ms",fantasy;
 }
 .dentistA {
-  background: url(../images/theme-dentist-a.png) top left repeat-x;
+background: url(../images/theme-dentist-a.png) top left repeat-x;
 }
 .dentistB {
-  background: url(../images/theme-dentist-b.png) top left repeat-x;
+background: url(../images/theme-dentist-b.png) top left repeat-x;
 }
 .houseA {
-  background: url(../images/theme-house-a.png) top left repeat-x;
+background: url(../images/theme-house-a.png) top left repeat-x;
 }
 .houseB {
-  background: url(../images/theme-house-b.png) top left repeat-x;
+background: url(../images/theme-house-b.png) top left repeat-x;
 }
 .vetA {
-  background: url(../images/theme-pet-a.png) top left repeat-x;
+background: url(../images/theme-pet-a.png) top left repeat-x;
 }
 .vetB {
-  background: url(../images/theme-pet-b.png) top left repeat-x;
+background: url(../images/theme-pet-b.png) top left repeat-x;
 }
 .vdA {
-  background: url(../images/theme-vd-a.png) top left repeat-x;
+background: url(../images/theme-vd-a.png) top left repeat-x;
 }
 .vdB {
-  background: url(../images/theme-vd-b.png) top left repeat-x;
+background: url(../images/theme-vd-b.png) top left repeat-x;
 }
