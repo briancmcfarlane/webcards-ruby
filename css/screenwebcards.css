@@ -3,11 +3,9 @@ body, form, h1, h2, #tagline, h3, #tnav, #tnav li, #sidebar ul, #sidebar li, #co
 margin: 0;
 padding: 0;
 }
-
 table {
   border-collapse: collapse;
 }
-
 body {
 text-align: center;
 background: #00A6F0;
@@ -284,7 +282,6 @@ border: 3px solid #00A6F0;
 #democard, #stylecard {
   margin-top: 1em;
 }
-
 #democard {
   padding-top: 100px;
   height: 300px;
