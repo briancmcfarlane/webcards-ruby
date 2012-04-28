@@ -4,6 +4,16 @@ require 'cgi'
 
 class Build
 
+    attr_accessor :webCardFilePath, :webcardHash
+    
+    def initialize
+
+        @webcardFilePath = "data/user_webcards.txt"
+        @webcardFilePath.untaint
+        @webcardHash = File.open("#{@webcardFilePath}", "rb") {|f| Marshal.load(f)}
+        
+    end
+
     def setSaveBtnText(filePath)
         hash = File.open("#{filePath}", "rb") {|f| Marshal.load(f)}
         if (hash['auth'] == 'y')
@@ -11,6 +21,37 @@ class Build
         else
             return "Save and Create Account"
         end
+    end
+    
+    def createBaseHash
+        filePath = "data/user_webcards.txt"
+        filePath.untaint
+        hash = {}
+        File.open("#{filePath}", "wb") {|f| Marshal.dump(hash, f)}
+    end
+    
+    def setTxtStyle(txtStyle)
+        if (txtStyle == "fun")
+            return "checked=\"checked\""
+        end
+    end
+    
+    def setBorderImg(borderAlt)
+        if (borderAlt == "Dentist Appt. A Border Image")
+            return "imgBorder"
+        end
+    end
+    
+    def setRecip
+        return "This is who I'm sending the card to."
+    end
+    
+    def setMsg
+        return "This is what I want to say."
+    end
+    
+    def setSender
+        return "This is me!"
     end
     
 end

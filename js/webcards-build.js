@@ -55,16 +55,36 @@ var wc_build = {
      wc_build.editBtn = wc_global.getObj('editCard');
      
      //set the default border image
-     wc_build.chosenBorderImg = 'Dentist Appt. A Border Image';
+     //wc_build.chosenBorderImg = 'Dentist Appt. A Border Image';
      
      //set default font
-     wc_build.chosenFont = 'fun';
+     //wc_build.chosenFont = 'fun';
+     
+     wc_build.setDefaults();
 
      // launching configuration functions
      wc_build.configImgs();
      wc_build.configSaveBtn();
      wc_build.configRadioBtns();
      wc_build.configDemoInputs();
+  },
+  
+  setDefaults : function(){
+  
+    for (var i=0; i<wc_build.allBorderImgs; i++) {
+         if (wc_build.borderImgs[i].className === 'imgBorder'){
+            wc_build.chosenBorderImg = wc_build.borderImgs[i].getAttribute('alt');
+         }
+    }
+    
+    for (var i=0; i<wc_build.allFonts; i++) {
+         if (wc_build.theFonts[i].checked == true) {
+            wc_build.chosenFont = wc_build.theFonts[i].value;
+         }
+     }
+     
+    wc_build.setBorderAndFont();
+  
   },
   
   configRadioBtns : function(){
@@ -155,13 +175,14 @@ var wc_build = {
         var senderInput = document.getElementById('senderInput');
         var senderInputText = senderInput.value;
         
+        var hiddenRecip = document.getElementById('recip');
+        var hiddenMsg = document.getElementById('msg');
+        var hiddenSender = document.getElementById('sender');
+        
         //remove the inputs from the card
         theCard.removeChild(recipientInput);
         theCard.removeChild(messageInput);
         theCard.removeChild(senderInput);
-        
-        //re-enable the save button
-        wc_build.saveBtn.disabled = false;
         
         //set the new text to the paragraphs
         wc_build.theRecipient.firstChild.data = recipientInputText;
@@ -177,6 +198,7 @@ var wc_build = {
         else {
             wc_build.validRecipient = true;
             wc_build.theRecipient.className = '';
+            hiddenRecip.value = wc_build.theRecipient.firstChild.data;
         }
         
         if (wc_build.theTextArea.firstChild.data === '' || wc_build.theTextArea.firstChild.data === 'Enter a message'){
@@ -187,6 +209,7 @@ var wc_build = {
         else {
             wc_build.validTextArea = true;
             wc_build.theTextArea.className = '';
+            hiddenMsg.value = wc_build.theTextArea.firstChild.data;
         }
         
         if (wc_build.theSender.firstChild.data === '' || wc_build.theSender.firstChild.data === 'Enter your name'){
@@ -197,6 +220,7 @@ var wc_build = {
         else{
             wc_build.validSender = true;
             wc_build.theSender.className = '';
+            hiddenSender.value = wc_build.theSender.firstChild.data;
         }
         
         //display the paragraphs again
@@ -204,6 +228,10 @@ var wc_build = {
         wc_build.theTextArea.hidden = false;
         wc_build.theSender.hidden = false;
         
+        //re-enable the save button
+        if (wc_build.validRecipient === true && wc_build.validTextArea === true && wc_build.validSender === true){
+            wc_build.saveBtn.disabled = false;
+        }
         
     }
     
@@ -225,8 +253,8 @@ var wc_build = {
       
      var democard = wc_global.getObj('democard')
      var borderToSet = null;
-     var fontToSet = null;
      var completeClassName = null;
+     var borderField = document.getElementById('bordr');
       
      switch (wc_build.chosenBorderImg) {
         case "Dentist Appt. A Border Image" :borderToSet = 'dentistA';break;
@@ -241,15 +269,16 @@ var wc_build = {
      
      for (var i=0; i<wc_build.allFonts; i++) {
          if (wc_build.theFonts[i].checked == true) {
-            fontToSet = wc_build.theFonts[i].value;
             wc_build.chosenFont = wc_build.theFonts[i].value;
             wc_build.theLabels[0].className = '';
          }
      }
      
-     completeClassName = fontToSet + " " + borderToSet;
+     completeClassName = wc_build.chosenFont + " " + borderToSet;
      
      democard.className = completeClassName;
+     
+     borderField.value = wc_build.chosenBorderImg;
      
   },
 
