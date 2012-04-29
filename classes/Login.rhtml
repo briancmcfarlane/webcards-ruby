@@ -20,16 +20,16 @@ class Login
        
         if (email !="" && passwd !="")
             account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
-                if (account_hash.has_key?(email))
-                         hashedPW = Digest::SHA1.hexdigest(passwd)
-			if (account_hash[email][0] == hashedPW)
-                            @loginGood = 'true'
-                             return 'true'
-                        end
-                else
-                  @errorMsg = 'Username and Password Not Found'
-                  return 'false'
+            if (account_hash.has_key?(email))
+                hashedPW = Digest::SHA1.hexdigest(passwd)
+				if (account_hash[email][0] == hashedPW)
+                    @loginGood = 'true'
+                    return 'true'
                 end
+            else
+                @errorMsg = 'Username and Password Not Found'
+                return 'false'
+            end
         else
            @errorMsg = 'Please Enter a Username and Password'
            return 'false'
