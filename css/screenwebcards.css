@@ -38,6 +38,8 @@ text-transform: lowercase;
 }
 #logo a {
 text-decoration: none;
+width: 3em;
+display: block;
 }
 #logo h1:hover {
 text-shadow: .1em 0 .1em #d3d3d3;
