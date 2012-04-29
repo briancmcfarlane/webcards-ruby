@@ -152,9 +152,6 @@ float: left;
 #content form div, #recip, #msg, #sender {
 margin-bottom: 1.25em;
 }
-#content form label {
-text-transform: capitalize;
-}
 img {
 border: 0;
 }
