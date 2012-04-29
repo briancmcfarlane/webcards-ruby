@@ -61,18 +61,20 @@ page.content = <<_PAGECONTENT_
 
         </div>
 
-        <div id="democard" class="fun dentistA">
+        <div id="demo">
+            <div id="democard" class="fun dentistA">
+                
+                <p id="demo_recip">#{build::setRecip}</p>
+                
+                <p id="demo_msg">#{build::setMsg}</p>
+                
+                <p id="demo_sender">#{build::setSender}</p>
             
-            <p id="demo_recip">#{build::setRecip}</p>
-            
-            <p id="demo_msg">#{build::setMsg}</p>
-            
-            <p id="demo_sender">#{build::setSender}</p>
-        
+            </div>
+            <input type="button" id="editCard" name="editCard" value ="Edit Card" tabindex="140"/>
+            <input type="submit" id="save" name="save" value="#{build::setSaveBtnText(filePath)}" tabindex="150"/>
         </div>
 
-        <input type="button" id="editCard" name="editCard" value ="Edit Card" tabindex="140"/>
-        <input type="submit" id="save" name="save" value="#{build::setSaveBtnText(filePath)}" tabindex="150"/>
     </form>
 _PAGECONTENT_
 

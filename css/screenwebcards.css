@@ -225,6 +225,7 @@ margin-top: 1em;
 margin: 1em 0;
 }
 
+
 /* floated lists in content areas */
 #form label, #content form label {
 float: left;
@@ -278,24 +279,30 @@ margin:15px 275px;
 }
 
 /*preview css*/
-#democard, #stylecard {
+#demo, #stylecard {
 margin-top: 1em;
+}
+#demo {
+min-height: 300px;
+width: 400px;
+float: left;
 }
 #democard {
 padding-top: 100px;
-height: 300px;
+width: 400px;
 border: 1px solid #999;
 overflow: hidden;
-float: left;
-width: 400px;
 }
 #democard p {
-margin-left: 1em;
+margin: 1em;
 }
 #democard.preview {
 width: 100%;
 }
-
+#democardControls {
+float: left;
+width: 400px;
+}
 #stylecard {
 float: left;
 width: 300px;
