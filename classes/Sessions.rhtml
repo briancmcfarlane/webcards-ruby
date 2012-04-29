@@ -29,7 +29,7 @@ class Sessions
 		r = Apache.request
 		r.content_type = 'text/html'
 		#Change path to your directory
-		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~bmcfarlane/webcards-ruby/; expires=#{ed}")
+		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
 		r.send_http_header
 		 
  	end
@@ -87,6 +87,14 @@ class Sessions
             cgi.header('location'=>"index.rhtml?p=login")
         end
     end
+	
+	def validateAdmin(filePath)
+	    cgi = CGI::new
+        hash = self::unserializeHash(filePath)
+        if (hash['auth'] != 'a')
+            cgi.header('location'=>"index.rhtml?p=login")
+        end
+	end
 
 end
 %>
