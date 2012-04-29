@@ -19,6 +19,78 @@ class AccountImporter
 			return
 		end
 	end
+	
+	def importCards(email)
+	
+		webcardFilePath = "data/user_webcards.txt"
+		webcardFilePath.untaint
+		
+		webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+		
+		userCards = webcardHash[email]
+		
+		cardIds = userCards::keys
+		
+		totalCards = cardIds.length - 1
+		
+		cardList = ''
+		
+		for i in (0..totalCards)
+		
+			cardList += '<tr>'
+			
+				currentCardId = cardIds[i]
+				
+				cardList += '<td><input type="radio" name="card" value="' + currentCardId + '" /></td>'
+				cardList += '<td>' + userCards[cardIds[i]]['sender'] + '</td>'
+				cardList += '<td>' + userCards[cardIds[i]]['recip'] + '</td>'
+				cardList += '<td>' + userCards[cardIds[i]]['txtstyle'] + '</td>'
+				cardList += '<td><img src="' + self::loadBorderGraphic(userCards[cardIds[i]]['bordr']) + '"></td>'
+				cardList += '<td>' + userCards[cardIds[i]]['msg'] + '</td>'
+			
+			cardList += '</tr>'
+	
+		end
+		
+		cardList
+		
+	end
+	
+	def loadBorderGraphic(bordrAlt)
+		
+		bordrSrc = ''
+		
+		case (bordrAlt)
+			when "Dentist Appt. A Border Image"
+			bordrSrc = "images/theme-dentist-a.png"
+			
+			when "Dentist Appt. B Border Image"
+			bordrSrc = "images/theme-dentist-b.png"
+			
+			when "Open House A Border Image"
+			bordrSrc = "images/theme-house-a.png"
+			
+			when "Open House B Border Image"
+			bordrSrc = "images/theme-house-b.png"
+			
+			when "Vet Appt. A Border Image"
+			bordrSrc = "images/theme-pet-a.png"
+			
+			when "Vet Appt. B Border Image"
+			bordrSrc = "images/theme-pet-b.png"
+			
+			when "Valentine's Day A Border Image"
+			bordrSrc = "images/theme-vd-a.png"
+			
+			when "Valentine's Day B Border Image"
+			bordrSrc = "images/theme-vd-b.png"
+			
+		end
+		
+		return bordrSrc
+		
+	end
+	
 
 end
 

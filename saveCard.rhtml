@@ -11,9 +11,10 @@
 	 
 	ERuby::import('classes/Build.rhtml')
 	build = Build::new
-	 
+	
+	cardId = Time::new.to_i.to_s
 	if (sessionHash['auth'] == 'n')
-		sessionHash['cardId'] = Time::new.to_i.to_s
+		sessionHash['cardId'] = cardId
 		sessionHash['txtstyle'] = cgi['txtstyle']
 		sessionHash['bordr'] = cgi['bordr']
 		sessionHash['recip'] = cgi['recip']
@@ -22,7 +23,34 @@
 		sess::serializeHash(sessionFilePath, sessionHash)
 		cgi.header('location'=>"index.rhtml?p=registration")
 	else
-		build::saveCardToUserHash(sessionHash['email'])
+		#build::saveCardToUserHash(sessionHash['email'], cardId, cgi['txtstyle'], cgi['bordr'], cgi['recip'], cgi['msg'], cgi['sender'])
+		
+		email = sessionHash['email']
+		txtstyle = cgi['txtstyle']
+		bordr = cgi['bordr']
+		recip = cgi['recip']
+		msg = cgi['msg']
+		sender = cgi['sender']
+		
+		cardId = Time::new.to_i.to_s
+		
+		webcardFilePath = "data/user_webcards.txt"
+		webcardFilePath.untaint
+		
+		webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+		
+		webcardHash[email][cardId] = {}
+		webcardHash[email][cardId]['txtstyle'] = txtstyle
+		webcardHash[email][cardId]['bordr'] = bordr
+		webcardHash[email][cardId]['recip'] = recip
+		webcardHash[email][cardId]['msg'] = msg
+		webcardHash[email][cardId]['sender'] = sender
+		
+		File.open("#{webcardFilePath}", "wb") {|f| Marshal.dump(webcardHash, f)}
+		
+		
+		webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+
 		cgi.header('location'=>"index.rhtml?p=myaccount")
 	end
 

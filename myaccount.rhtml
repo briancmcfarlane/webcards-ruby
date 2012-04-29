@@ -13,13 +13,9 @@
  
  accountHash = aI::unserializeHash("data/user_accounts.txt")
  
- #userEmail = sessionHash['email']
- #userName = accountHash[userEmail][1]
- #userPlan = accountHash[userEmail][2]
- 
- userEmail = 'test147@test.com'
- userName = 'Dean Hunter'
- userPlan = 'Silver'
+ userEmail = sessionHash['email']
+ userName = accountHash[userEmail][1]
+ userPlan = accountHash[userEmail][2]
  
 page.title = <<_PAGETITLE_
         WebCards: Your Account
@@ -61,9 +57,9 @@ page.content = <<_PAGECONTENT_
 						</tr>
 					</thead>
 					<tbody>
+						#{aI::importCards(userEmail)}
 					</tbody>
-					
-					</table>
+				</table>
 					<br />
 					<input type="submit" value="Delete Card" name="btn" />&nbsp<input type="submit" value="Send Card" name="btn" />&nbsp;<input type="submit" value="Edit Card" name="btn" />
 
