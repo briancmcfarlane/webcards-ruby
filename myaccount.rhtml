@@ -5,35 +5,62 @@
  sess::createSession
  
  filePath = sess::getFilePath
- sess::validateLogin(filePath)
+ #sess::validateLogin(filePath)
+ sessionHash = sess::unserializeHash(filePath)
+
+ 
+ ERuby::import('classes/AccountImporter.rhtml')
+ aI = AccountImporter::new
+ 
+ accountHash = aI::unserializeHash("data/acct.txt")
+ 
+ userEmail = 'test101@test.com'
+ userName = accountHash[userEmail][1]
+ userPlan = accountHash[userEmail][2]
  
 page.title = <<_PAGETITLE_
         WebCards: Your Account
 _PAGETITLE_
 
 page.content = <<_PAGECONTENT_
-    <h2>Your Account</h2>
+    <h2>#{userName}'s Account</h2>
         <h3>Account Details</h3>
         <p>If you want to alter your account details, please make sure all fields are completed. Any password that meets the requirements will replace your current password. Requirements for a password: 7 characters long, and contains an uppercase letter, a lowercase letter and a number.</p>
         <form method="post" action=""><div>
-            <label for="emailAddr">Email Address: </label><input type="text" size="20" name="email" id="emailAddr" value=""/><br/>
+			<label for="name">Name: </label><input type="text" size="20" name="name" id="name" value="#{userName}" /><br/>
+            <label for="emailAddr">Email Address: </label><input type="text" size="20" name="email" id="emailAddr" value="#{userEmail}"/><br/>
             <label for="password">Password: </label><input type="password" size="20" name="password" id="password" value=""/><br/>
             <label for="confirmpassword">Confirm Password: </label><input type="password" size="20" name="confirmpassword" id="confirmpassword" value=""/><br/>
-            <label for="name">Name: </label><input type="text" size="20" name="name" id="name" value="" /><br/>
 
-            <p>Your current plan: <strong></strong></p>
+            <p>Your current plan: <strong>#{userPlan}</strong></p>
             <h3>Update your plan: </h3>
-                <label for="copper">Copper Plan </label><input type="radio" name="plan" id="copper" value="Copper" /><br />
-                <label for="silver">Silver Plan </label><input type="radio" name="plan" id="silver" value="Silver" /><br />
-                <label for="gold">Gold Plan </label><input type="radio" name="plan" id="gold" value="Gold" /> <br/>
-                <label for="platinum">Platinum Plan </label><input type="radio" name="plan" id="platinum" value="Platinum" /> <br/>
+                <label for="copper">Copper Plan </label><input #{aI::selectPlan('Copper', userPlan)} type="radio" name="plan" id="copper" value="Copper" /><br />
+                <label for="silver">Silver Plan </label><input #{aI::selectPlan('Silver', userPlan)} type="radio" name="plan" id="silver" value="Silver" /><br />
+                <label for="gold">Gold Plan </label><input #{aI::selectPlan('Gold', userPlan)} type="radio" name="plan" id="gold" value="Gold" /> <br/>
+                <label for="platinum">Platinum Plan </label><input #{aI::selectPlan('Platinum', userPlan)} type="radio" name="plan" id="platinum" value="Platinum" /> <br/>
             <input type="hidden" name="alterAccount" value="y" />
                                  
             <label>&nbsp;</label><input type="submit" value="Save Changes"/>
         </div></form>
             <div class="clr"></div>
             <h3>Your Webcards</h3>
-                
+			
+            <form method="post" action="">
+				<table border="1">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Sender</th>
+							<th>Recipient</th>
+							<th>Text Style</th>
+							<th>Border</th>
+							<th>Message</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					
+					</table>
             <p><a href="index.rhtml?p=build">Create Webcards</a></p>
 
 _PAGECONTENT_

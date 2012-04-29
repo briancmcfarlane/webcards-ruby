@@ -53,6 +53,17 @@ class Build
     def setSender
         return "This is me!"
     end
+	
+	def saveCardToUserHash(email)
+		
+		cardId = Time::new.to_i.to_s
+		
+		webcardFilePath = "data/user_webcards.txt"
+		webcardFilePath.untaint
+		
+		webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+
+	end
     
 end
 

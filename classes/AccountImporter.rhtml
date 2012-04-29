@@ -1,0 +1,25 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+
+class AccountImporter
+		
+	def serializeHash(filePath,hash)
+		File.open("#{filePath}", "wb") {|f| Marshal.dump(hash, f)}
+	end
+	
+	def unserializeHash(filePath)
+		return File.open("#{filePath}", "rb") {|f| Marshal.load(f)}
+	end
+	
+	def selectPlan(radioBtn, userPlan)
+		if (radioBtn == userPlan)
+			return "checked=\"checked\""
+		else
+			return
+		end
+	end
+
+end
+
+%>

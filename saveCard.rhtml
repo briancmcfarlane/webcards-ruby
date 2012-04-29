@@ -1,0 +1,29 @@
+#!/opt/local/bin/eruby
+<%
+	require 'cgi'
+	cgi = CGI::new
+ 
+	ERuby::import('classes/Sessions.rhtml')
+	sess = Sessions::new
+	sess::createSession
+	sessionFilePath = sess::getFilePath
+	sessionHash = sess::unserializeHash(sessionFilePath)
+	 
+	ERuby::import('classes/Build.rhtml')
+	build = Build::new
+	 
+	if (sessionHash['auth'] == 'n')
+		sessionHash['cardId'] = Time::new.to_i.to_s
+		sessionHash['txtstyle'] = cgi['txtstyle']
+		sessionHash['bordr'] = cgi['bordr']
+		sessionHash['recip'] = cgi['recip']
+		sessionHash['msg'] = cgi['msg']
+		sessionHash['sender'] = cgi['sender']
+		sess::serializeHash(sessionFilePath, sessionHash)
+		cgi.header('location'=>"index.rhtml?p=registration")
+	else
+		build::saveCardToUserHash(sessionHash['email'])
+		cgi.header('location'=>"index.rhtml?p=myaccount")
+	end
+
+%>
