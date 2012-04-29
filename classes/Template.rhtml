@@ -113,27 +113,24 @@ class Template
 	
 	# method: display user info or login link
   	def print_loginbox
+		cgi = CGI::new
 
-             file_path = @sess::getFilePath
-             user_hash = @sess::unserializeHash(file_path)
-             userName = user_hash['userName']
 	    print "\n\t", '<div id="accountLinks">'
 		
-		# check session info and create links
-		# insert if statement to check session
-                loginAnswer = user_hash['auth']
-		if(loginAnswer == 'y' || loginAnswer == 'a')
-			# insert if statement to check if logged in user is an admin
-			if(loginAnswer == 'a')
-				print "\n\t", 'Welcome Admin  ' + userName + '<br /><a href="href="index.rhtml?p=admin">Admin Page</a> or <a href="href="index.rhtml?p=logout">Log Out</a>'
+		if (cgi.cookies().key?("RUBYSESSION"))
+			file_path = @sess::getFilePath
+			user_hash = @sess::unserializeHash(file_path)
+			if (user_hash['userName'] != '')
+				print "\n\t", 'Welcome ' + user_hash['userName'] + '<br /><a href="index.rhtml?p=myaccount">My Account</a> or <a href="index.rhtml?p=logout">Log Out</a>'
 			else
-				print "\n\t", 'Welcome ' + userName + '<br /><a href="href="index.rhtml?p=myaccount">My Account</a> or <a href="href="index.rhtml?p=logout">Log Out</a>'
+				print '<a href="index.rhtml?p=login">Log-in</a> or <a href="index.rhtml?p=registration">Sign up</a>'
 			end
 		else
-		    print "\n\t", '<a href="index.rhtml?p=login">Log-in</a> or <a href="index.rhtml?p=registration">Sign up</a>'
-                end
+			print '<a href="index.rhtml?p=login">Log-in</a> or <a href="index.rhtml?p=registration">Sign up</a>'
+		end
 		
 		print "\n\t", '</div>'
+		
 	end
 	
 	# method: include javascript on build page

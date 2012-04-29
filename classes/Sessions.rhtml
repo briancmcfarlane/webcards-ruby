@@ -29,22 +29,34 @@ class Sessions
 		r = Apache.request
 		r.content_type = 'text/html'
 		#Change path to your directory
-		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~bmcfarlane/webcards-ruby/; expires=#{ed}")
+		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
 		r.send_http_header
 		 
  	end
  	
  	#deletes the file and cookie that is used for the current session.
  	def deleteSession(file)
- 		ed = CGI.rfc1123_date(Time.now - (60 * 60 * 24))
-		id = Time::new.to_i.to_s
-		r = Apache.request
-		r.content_type = 'text/html'
-		#Change path to your directory
-		r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~bmcfarlane/webcards-ruby/; expires=#{ed}")
-		r.send_http_header
+		cgi = CGI::new
 		
-		File.delete(file)
+ 		#ed = CGI.rfc1123_date(Time.now - (60 * 60 * 24))
+		#id = Time::new.to_i.to_s
+		id = cgi.cookies()["RUBYSESSION"].value
+		#r = Apache.request
+		#r.content_type = 'text/html'
+		#Change path to your directory
+		#r.headers_out.add('Set-Cookie', "RUBYSESSION=#{id}; path=/~skrumrei/webcards-ruby/; expires=#{ed}")
+		#r.send_http_header
+		
+		filePath = "temp_files/#{id}.txt"
+        filePath.untaint
+        #set up a base hash for the session, auth becomes y after login
+        hash = {}
+        hash['auth'] = 'n'
+        hash['email'] = ''
+        hash['userName'] = ''
+        #serialize the hash
+        self::serializeHash(filePath, hash)
+		#File.delete(file)
  	
  	end
 	

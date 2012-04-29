@@ -43,7 +43,7 @@ class Login
           if (@loginGood == 'true')
             redirect =   cgi.header('location'=>"index.rhtml?p=loginsuccess")
           else
-            redirect =   @cgi.header('location'=>"index.rhtml?p=login")
+            redirect =   cgi.header('location'=>"index.rhtml?p=login")
           end
 
           print redirect

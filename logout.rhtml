@@ -1,0 +1,17 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+cgi = CGI::new
+ERuby::import('classes/Sessions.rhtml')
+sess = Sessions::new
+
+#gets the file path
+file = sess::getFilePath
+file.untaint
+
+#deletes the cookie and session file the redirects to login page
+sess::deleteSession(file)
+sess::createSession
+cgi.header('location'=>"index.rhtml?p=login")
+%>
+
