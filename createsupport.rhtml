@@ -1,0 +1,32 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+cgi = CGI::new
+
+#ERuby::import('classes/Sessions.rhtml')
+#sess = Sessions::new
+#sess::createSession
+
+ERuby::import('classes/ContactSupport.rhtml')
+contact = ContactSupport::new 
+contact::submission(cgi['name'],cgi['email'],cgi['subject'],cgi['message'],cgi['submit'])
+
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Webcards: Support</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/screenwebcards.css" media="screen,projection" />
+	<link rel="stylesheet" type="text/css" href="css/printwebcards.css" media="print" />
+	<% contact::redirect %>
+</head>
+<body>
+	<p id="jump"><a href="#contentarea">Jump to main content</a></p>
+	<div id="container">
+		<h1>WebCards</h1>
+		<h2 id="tagline">An E-Card For Every Occasion</h2>
+	</div>
+</body>
+</html>
