@@ -12,37 +12,38 @@ class Login
 
          @errorMsg = ' '
          @loginGood = 'false'
-         @cgi = CGI::new
 
        end
 
-      def checkLogin
-        
-        if (@cgi['email']!="" && @cgi['passwd']!="")
-            account_hash = File.open("data/acct.txt", "rb") {|f| Marshal.load(f)}
-                if (account_hash.has_key?(@cgi['email']))
-                         hashedPW = Digest::SHA1.hexdigest(@cgi['passwd'])
-			if (account_hash[@cgi['email']][0] == hashedPW)
+
+      def checkLogin(email, passwd)
+       
+        if (email !="" && passwd !="")
+            account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
+                if (account_hash.has_key?(email))
+                         hashedPW = Digest::SHA1.hexdigest(passwd)
+			if (account_hash[email][0] == hashedPW)
                             @loginGood = 'true'
+                             return 'true'
                         end
                 else
                   @errorMsg = 'Username and Password Not Found'
+                  return 'false'
                 end
         else
            @errorMsg = 'Please Enter a Username and Password'
+           return 'false'
         end
       end
 
 
       def redirect
+        cgi = CGI::new
           redirect = ''
           if (@loginGood == 'true')
-            #redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=loginsuccess'</script>"
-            redirect =   @cgi.header('location'=>"index.rhtml?p=loginsuccess")
+            redirect =   cgi.header('location'=>"index.rhtml?p=loginsuccess")
           else
-            #redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=login'</script>"
             redirect =   @cgi.header('location'=>"index.rhtml?p=login")
-
           end
 
           print redirect

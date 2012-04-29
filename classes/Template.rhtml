@@ -1,14 +1,16 @@
 <%
+ERuby::import('classes/Sessions.rhtml')
 
 # pull in the CGI data
 require 'cgi'
 
 class Template	
 
-	attr_accessor :title, :content, :fileName, :yr
+	attr_accessor :title, :content, :fileName, :yr, :sess
 
   	def initialize
-    	# property: global nav items (array containing hashes)
+        @sess = Sessions::new
+        # property: global nav items (array containing hashes)
     	@globalnav = [
     		{:id => 'home', :label => 'Home', :url => '.', :tabIndex => '140'},
     		{:id => 'features', :label => 'Features', :url => 'index.rhtml?p=features', :tabIndex => '150'},
@@ -111,20 +113,25 @@ class Template
 	
 	# method: display user info or login link
   	def print_loginbox
+
+             file_path = @sess::getFilePath
+             user_hash = @sess::unserializeHash(file_path)
+             userName = user_hash['userName']
 	    print "\n\t", '<div id="accountLinks">'
 		
 		# check session info and create links
 		# insert if statement to check session
-		#if 
+                loginAnswer = user_hash['auth']
+		if(loginAnswer == 'y' || loginAnswer == 'a')
 			# insert if statement to check if logged in user is an admin
-			#if
-				#print "\n\t", 'Welcome Admin {session[:name]}<br /><a href="/webcards/admin/admin">Admin Page</a> or <a href="/webcards/account/logout">Log Out</a>'
-			#else
-				#print "\n\t", 'Welcome {session[:name]}<br /><a href="/webcards/account/myaccount">My Account</a> or <a href="/webcards/account/logout">Log Out</a>'
-			#end
-		#else
+			if(loginAnswer == 'a')
+				print "\n\t", 'Welcome Admin  ' + userName + '<br /><a href="href="index.rhtml?p=admin">Admin Page</a> or <a href="href="index.rhtml?p=logout">Log Out</a>'
+			else
+				print "\n\t", 'Welcome ' + userName + '<br /><a href="href="index.rhtml?p=myaccount">My Account</a> or <a href="href="index.rhtml?p=logout">Log Out</a>'
+			end
+		else
 		    print "\n\t", '<a href="index.rhtml?p=login">Log-in</a> or <a href="index.rhtml?p=registration">Sign up</a>'
-		#end
+                end
 		
 		print "\n\t", '</div>'
 	end

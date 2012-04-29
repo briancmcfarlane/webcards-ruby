@@ -30,12 +30,12 @@ class Registration
           accounthash = {}
           accounthash[email] = hashedPW, uName, plan, 'f'
           
-          File.open("data/acct.txt", "wb") {|f| Marshal.dump(accounthash, f)}
+          File.open("data/user_accounts.txt", "wb") {|f| Marshal.dump(accounthash, f)}
           @acctGood = 'true'
         end
 
         def checkAccounts
-          account_hash = File.open("data/acct.txt", "rb") {|f| Marshal.load(f)}
+          account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
           #msg = ''
           if (account_hash.has_key?(@cgi['email']))
 
