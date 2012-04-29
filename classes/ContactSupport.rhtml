@@ -1,0 +1,160 @@
+<%
+class ContactSupport	
+
+	attr_accessor :hash, :dts, :keys, :tbl, :errs
+
+	def createForm(rs, dts)
+		if(rs::nil? || rs!='y')
+			name = ''
+			name_err = ''
+			email = ''
+			email_err = ''
+			subject = ''
+			subj_err = ''
+			message = ''
+			msg_err =''
+		else
+			#open file and put contents into hash. You must create a file that has at least one has to start with.
+			@hash = File.open("temp_files/temp_contact_data.txt", "rb") {|f| Marshal.load(f)}	
+			temp = @hash[dts]
+
+			name = temp[0]
+			name_err = temp[1]
+			email = temp[2]
+			email_err = temp[3]
+			subject = temp[4]
+			subj_err = temp[5]
+			message = temp[6]
+			msg_err = temp[7]
+			
+			#delete current temp values
+				@hash.delete(dts)
+			#write hash back to file
+				File.open("temp_files/temp_contact_data.txt", "wb") {|f| Marshal.dump(@hash, f)}
+
+		end
+		buildForm(name, name_err, email, email_err, subject, subj_err, message, msg_err)
+	end
+	
+	def buildForm(name, name_err, email, email_err, subject, subj_err, message, msg_err)
+		@form = '<form method="post" action="createsupport.rhtml"><div id="support-form">
+			<label for="name">Name: </label><input type="text" size="20" name="name" id="name" tabindex="100" value="'+ name +'" />
+				<input type="text" size="20" name="name_error" id="name_error" class="err_msg" readonly="readonly" value="'+ name_err +'" /><br />
+				
+            <label for="email">Email Address: </label><input type="text" size="20" name="email" id="email" tabindex="110" value="'+ email +'"/>
+				<input type="text" size="20" name="email_error" id="email_error" class="err_msg" readonly="readonly" value="'+ email_err +'" /><br />
+				
+			<label for="subject">Subject: </label><input type="text" size="20" name="subject" id="subject" tabindex="120" value="'+ subject +'" />
+				<input type="text" size="20" name="subj_error" id="subj_error" class="err_msg" readonly="readonly" value="'+ subj_err +'" /><br />
+				
+			<label for="message">Message: </label><textarea name="message" id="message" tabindex="130">'+ message +'</textarea>
+				<input type="text" size="20" name="msg_error" id="msg_error" class="err_msg" readonly="readonly" value="'+ msg_err +'" /><br />
+				
+			<input type="hidden" name="p" value="support" />
+			<label for="sub">&nbsp;</label><input type="submit" id="sub" name="submit" value="Send" />
+		</div></form>'
+		return @form
+	end
+
+
+	def submission(name, email, subject, message, submit)
+		if (submit!="")
+			@errs = 'n'
+			name_err = containsData(name, 'your name')
+			email_err = validEmail(email)
+			subj_err = containsData(subject, 'the subject')
+			msg_err = containsData(message, 'a message')
+
+			if(@errs == 'n')
+				#open file and put contents into support hash
+					@hash = File.open("data/contact_list.txt", "rb") {|f| Marshal.load(f)}
+				#time stamp and add new information to hash
+					tme = Time.now.strftime("%D %r")
+					dts = tme.to_s()
+					@hash[dts]=[name, email, subject, message]
+				#write hash back to file
+					File.open("data/contact_list.txt", "wb") {|f| Marshal.dump(@hash, f)}
+			else
+				#open file and put contents into temp hash
+					@hash = File.open("temp_files/temp_contact_data.txt", "rb") {|f| Marshal.load(f)}
+				#time stamp and add new information to hash
+					tme = Time.now.strftime("%m%j%Y%H%M%S")
+					@dts = tme.to_s()
+					@hash[@dts]=[name, name_err, email, email_err, subject, subj_err, message, msg_err]
+				#write hash back to file
+					File.open("temp_files/temp_contact_data.txt", "wb") {|f| Marshal.dump(@hash, f)}
+			end
+		end
+	end
+	
+	def containsData(field, errMsg)
+		msg = ''
+		if(field =="")
+			msg = 'Please enter '+ errMsg +'.'
+			@errs = 'y'
+		else
+			regex =  /[\*\$\+\/\\]/i
+			if(field =~ regex)
+				msg = 'Please remove any *, $, +, /, \\.'
+				@errs = 'y'
+			end
+		end
+		return msg
+	end
+
+	def validEmail(field)
+		msg = ''
+		if(field =="")
+			msg = 'Please enter your email.'
+			@errs = 'y'
+		else
+			regex = /^[^@\s]+@([-a-z0-9]+\.)+[a-z]{2,}$/i
+			if(field !~ regex)
+				msg = 'Please enter a valid email.'
+				@errs = 'y'
+			end
+		end
+		return msg
+	end
+		
+	def errHeader
+		headerMsg = ''
+		if (@errs == 'y')
+			headerMsg = '<div><p class="error"><strong>Please correct the following issues and re-submit the form.</strong></p></div>'
+		end
+		return headerMsg
+	end
+
+	def report
+		#open file and put contents into hash. You must create a file that has at least one has to start with.
+			@hash = File.open("data/contact_list.txt", "rb") {|f| Marshal.load(f)}	
+		#find hash keys
+			@keys = @hash.keys.sort
+		#find length of hash
+			len = @hash.length
+			
+		@tbl = '<table><tr><th>Date</th><th>User Name</th><th>Email</th><th>Subject</th><th>Message</th></tr>'
+		x = len - 1
+		while x >= 0
+			temp = @hash[@keys[x]]
+        	@tbl += '<tr><td>' + @keys[x] + '</td><td>' + temp[0] +  '</td><td><a href = mailto:' + temp[1] +'>' + temp[1] + '</a></td><td>' + temp[2] + '</td><td>' + temp[3] + '</td></tr>'
+        	x -=1
+        end
+        @tbl += '</table>'
+		
+		return @tbl
+	end
+
+	def redirect
+		redirect = ''
+		if (@errs == 'n')
+			redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=thankyou'</script>"
+		else
+			redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=support&rs="+ @errs +"&dts="+ @dts +"'</script>"
+		end
+		print redirect
+	end
+	
+end
+
+%>

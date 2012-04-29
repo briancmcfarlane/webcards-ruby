@@ -1,0 +1,21 @@
+<%
+ ERuby::import('classes/Sessions.rhtml')
+ sess = Sessions::new
+ sess::createSession
+ 
+ filePath = sess::getFilePath
+ sess::validateAdmin(filePath)
+
+ ERuby::import('classes/ContactSupport.rhtml')
+ req = ContactSupport::new
+
+page.title = <<_PAGETITLE_
+	WebCards: Support Requests
+_PAGETITLE_
+
+page.content = <<_PAGECONTENT_
+	<h2>Support Requests</h2>
+	#{req::report}
+_PAGECONTENT_
+
+%>

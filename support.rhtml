@@ -1,0 +1,34 @@
+#!/opt/local/bin/eruby
+<%
+require 'cgi'
+cgi = CGI::new
+
+ERuby::import('classes/Sessions.rhtml')
+sess = Sessions::new
+sess::createSession
+
+ERuby::import('classes/ContactSupport.rhtml')
+contact = ContactSupport::new 
+
+if(cgi['rs']::nil? || cgi['rs']!='y')
+	err_msg = ''
+else
+	@err_msg = '<div><p class="error"><strong>Please correct the following issues and re-submit the form.</strong></p></div>'
+end
+ 
+page.title = <<_PAGETITLE_
+	WebCards: Support
+_PAGETITLE_
+
+page.content = <<_PAGECONTENT_
+	<h2>Comments, Questions, Concerns</h2>
+	
+	<p>Please send us your contact information and message. You will hear back from us soon.</p>
+	
+	#{@err_msg}
+	
+	#{contact::createForm(cgi['rs'], cgi['dts'])}
+	
+_PAGECONTENT_
+
+%>

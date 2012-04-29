@@ -1,0 +1,17 @@
+<%
+ ERuby::import('classes/Sessions.rhtml')
+ sess = Sessions::new
+ sess::createSession
+
+page.title = <<_PAGETITLE_
+    WebCards: Support
+_PAGETITLE_
+
+page.content = <<_PAGECONTENT_
+    <h2>Thank You for Your Note.</h2>
+
+    <p>Someone will contact you soon.</p>
+
+_PAGECONTENT_
+
+%>
