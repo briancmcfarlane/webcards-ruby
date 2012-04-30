@@ -26,9 +26,9 @@ page.content = <<_PAGECONTENT_
         <h3>Account Details</h3>
         #{aI::provideAdminLink(sessionHash['auth'])}
         <p>If you want to alter your account details, please make sure all fields are completed. Any password that meets the requirements will replace your current password. Requirements for a password: 7 characters long, and contains an uppercase letter, a lowercase letter and a number.</p>
-        <form method="post" action=""><div>
+        <form method="post" action="alterAccountDetails.rhtml"><div>
+            <label for="editEmailAddr">Email Address: </label><input type="text" size="20" name="email" id="editEmailAddr" value="#{userEmail}" readonly="readonly"/><br/>
 			<label for="name">Name: </label><input type="text" size="20" name="name" id="name" value="#{userName}" /><br/>
-            <label for="emailAddr">Email Address: </label><input type="text" size="20" name="email" id="emailAddr" value="#{userEmail}"/><br/>
             <label for="password">Password: </label><input type="password" size="20" name="password" id="password" value=""/><br/>
             <label for="confirmpassword">Confirm Password: </label><input type="password" size="20" name="confirmpassword" id="confirmpassword" value=""/><br/>
 

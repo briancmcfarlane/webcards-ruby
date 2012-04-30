@@ -66,6 +66,25 @@ class Registration
   	def cleanData(data)
 		return data::gsub(/http:|ftp:|\.|\//i,'')
 	end
+    
+    def alterAccount(originalEmail, name, email, pw, plan)
+        
+        hashedPW = Digest::SHA1.hexdigest(pw)
+
+        accountFilePath = "data/user_accounts.txt"
+        accountFilePath.untaint
+        
+        accounthash = File.open(accountFilePath, "rb") {|f| Marshal.load(f)}
+        accounthash::delete(originalEmail)
+        
+        accounthash[email] = hashedPW, name, plan, 'f'
+
+        File.open(accountFilePath, "wb") {|f| Marshal.dump(accounthash, f)}
+        accounthash = File.open(accountFilePath, "rb") {|f| Marshal.load(f)}
+        p accounthash
+        
+    end
+    
 end
 
 %>

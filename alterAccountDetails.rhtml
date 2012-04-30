@@ -1,0 +1,61 @@
+#!/opt/local/bin/eruby
+<%
+	require 'cgi'
+	cgi = CGI::new
+    
+    name = cgi['name']
+    email = cgi['email']
+    password = cgi['password']
+    confirmpwd = cgi['confirmpassword']
+    plan = cgi['plan']
+    
+	ERuby::import('classes/Sessions.rhtml')
+	sess = Sessions::new
+	sess::createSession
+	sessionFilePath = sess::getFilePath
+	sessionHash = sess::unserializeHash(sessionFilePath)
+    
+    originalEmail = sessionHash['email']
+    
+    ERuby::import('classes/Registration.rhtml')
+    acct = Registration::new
+    acctAnwser = acct::checkAccounts(email)
+    
+    if (acctAnwser == 'false' || email == originalEmail)
+
+        if (password == confirmpwd && password != '')
+            acct::alterAccount(originalEmail, name, email, password, plan)
+
+
+            sessionHash['email'] = email
+            sessionHash['userName'] = name
+            sess::serializeHash(sessionFilePath,sessionHash)
+                
+                
+            #webcardFilePath = "data/user_webcards.txt"
+            #webcardFilePath.untaint
+            #webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+            
+            #userCards = webcardHash[originalEmail]
+
+            #webcardHash[email] = {}
+            
+            #keys = userCards::keys
+            
+            #userCards::keys::each do |key|
+            #    webcardHash[email][key] = {}
+            #    webcardHash[email][key] = userCards[key] 
+            #end
+            
+            #webcardHash::delete(originalEmail)
+            
+            #File.open("#{webcardFilePath}", "wb") {|f| Marshal.dump(webcardHash, f)}
+           
+        end
+        
+    end
+    
+ cgi.header('location'=>"index.rhtml?p=myaccount")
+    
+    
+%>
