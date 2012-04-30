@@ -90,6 +90,14 @@ class AccountImporter
 		return bordrSrc
 		
 	end
+    
+    def provideAdminLink(auth)
+        if (auth == 'a')
+            return '<a href="index.rhtml?p=admin">View Contact Form Submissions</a>'
+        else
+            return
+        end
+    end
 	
 
 end

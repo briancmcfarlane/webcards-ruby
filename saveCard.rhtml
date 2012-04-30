@@ -13,13 +13,6 @@
 	build = Build::new
 	
 	if (sessionHash['auth'] == 'n')
-		sessionHash['cardId'] = cgi['cardId']
-		sessionHash['txtstyle'] = cgi['txtstyle']
-		sessionHash['bordr'] = cgi['bordr']
-		sessionHash['recip'] = cgi['recip']
-		sessionHash['msg'] = cgi['msg']
-		sessionHash['sender'] = cgi['sender']
-		sess::serializeHash(sessionFilePath, sessionHash)
 		cgi.header('location'=>"index.rhtml?p=registration")
         
 	else 
