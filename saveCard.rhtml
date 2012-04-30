@@ -23,7 +23,6 @@
 		sess::serializeHash(sessionFilePath, sessionHash)
 		cgi.header('location'=>"index.rhtml?p=registration")
 	else
-		#build::saveCardToUserHash(sessionHash['email'], cardId, cgi['txtstyle'], cgi['bordr'], cgi['recip'], cgi['msg'], cgi['sender'])
 		
 		email = sessionHash['email']
 		txtstyle = cgi['txtstyle']
@@ -53,5 +52,5 @@
 
 		cgi.header('location'=>"index.rhtml?p=myaccount")
 	end
-
+    
 %>

@@ -1,0 +1,40 @@
+#!/opt/local/bin/eruby
+<%
+	require 'cgi'	
+    
+    cgi = CGI::new
+    
+    card = cgi['card']
+    btn = cgi['btn']
+    
+	ERuby::import('classes/Sessions.rhtml')
+	sess = Sessions::new
+	sess::createSession
+	sessionFilePath = sess::getFilePath
+	sessionHash = sess::unserializeHash(sessionFilePath)
+    userEmail = sessionHash['email']
+	
+    webcardFilePath = "data/user_webcards.txt"
+	webcardFilePath.untaint
+    
+    if (btn == "Delete Card")
+        webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+            
+        userCards = webcardHash[userEmail]
+        userCards::delete(card)
+        userKeys = webcardHash::keys
+
+        newHash = {}
+        
+        for i in (0..userKeys.length - 1)
+                newHash[userKeys[i]] = webcardHash[userKeys[i]]     
+        end
+           
+        File.open("#{webcardFilePath}", "wb") {|f| Marshal.dump(newHash, f)}
+        cgi.header('location'=>"index.rhtml?p=myaccount")
+        
+    elsif (btn == "Edit Card")
+        cgi.header('location'=>"index.rhtml?p=build")
+    end
+
+%>
