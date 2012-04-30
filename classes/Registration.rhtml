@@ -2,7 +2,7 @@
 
 # pull in the CGI data
 require 'cgi'
-
+require 'digest/sha1'
 
 class Registration
 
@@ -12,32 +12,32 @@ class Registration
 
          @errorMsg = ' '
          @acctGood = 'false'
-         @cgi = CGI::new
+         
         
        end
 
-        def createAccount
-
-          #sess = Sessions::new
-          
-
-          uName = @cgi['name']
-          email = @cgi['email']
-          pw = @cgi['password']
+        def createAccount(name, email, pw, plan)
 
           hashedPW = Digest::SHA1.hexdigest(pw)
-          plan = @cgi['plan']
-          accounthash = {}
-          accounthash[email] = hashedPW, uName, plan, 'f'
+
+          accounthash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
+          accounthash.untaint
+          accounthash[email] = hashedPW, name, plan, 'f'
           
           File.open("data/user_accounts.txt", "wb") {|f| Marshal.dump(accounthash, f)}
+
+          webcardFilePath = 'data/user_webcards.txt'
+          webcardFilePath.untaint
+          webcardHash = File.open("#{webcardFilePath}", "rb") {|f| Marshal.load(f)}
+          webcardHash[email]= {}
+          File.open("#{webcardFilePath}", "wb") {|f| Marshal.dump(webcardHash, f)}
           @acctGood = 'true'
         end
 
-        def checkAccounts
+        def checkAccounts(theEmail)
           account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
-          #msg = ''
-          if (account_hash.has_key?(@cgi['email']))
+
+          if (account_hash.has_key?(theEmail))
 
             @errorMsg = 'Email already in use'
             return 'true'
@@ -47,15 +47,13 @@ class Registration
         end
 
         def redirect
-          redirect = ''
-          if (@acctGood == 'true')
-            redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=success'</script>"
-            #redirect =   cgi.header('location'=>"index.rhtml?p=success")
-          else
-            redirect = "<script type='text/javascript'>window.location = 'index.rhtml?p=registration'</script>"
-            #redirect =   cgi.header('location'=>"index.rhtml?p=registration")
-              
-          end
+           cgi = CGI::new
+           redirect = ''
+           if (@acctGood == 'true')
+               redirect =   cgi.header('location'=>"index.rhtml?p=success")
+           else
+            redirect =   cgi.header('location'=>"index.rhtml?p=registration")
+           end
 
           print redirect
         end
