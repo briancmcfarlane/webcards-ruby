@@ -1,14 +1,39 @@
 #!/opt/local/bin/eruby
 <%
  ERuby::import('classes/Registration.rhtml')
+ ERuby::import('classes/Sessions.rhtml')
+ #ERuby::import('classes/Errorcheck.rhtml')
+ sess = Sessions::new
+ #errorCk = Errorcheck::new
  acct = Registration::new
  require 'cgi'
  cgi = CGI::new
 
-  acctAnwser = acct::checkAccounts
+  acctAnwser = acct::checkAccounts(cgi['email'])
+  #if(acctAnwser == 'false')
+    #errorAnwser =errorCk::regCheckData(cgi['name'], cgi['email'], cgi['password'], cgi['confirmpassword'])
+  #end
 
   if (acctAnwser == 'false' )
-    acct::createAccount
+
+    acct::createAccount(cgi['name'], cgi['email'], cgi['password'], cgi['plan'])
+
+   file_path = sess::getFilePath
+   file_hash = sess::unserializeHash(file_path)
+   acct_path = "data/user_accounts.txt"
+   acct_path.untaint
+   account_hash = File.open(acct_path, "rb") {|f| Marshal.load(f)}
+   isAdmin = account_hash[cgi['email']][3]
+
+  if( isAdmin == 'a')
+    file_hash['auth'] = 'a'
+  else
+    file_hash['auth'] = 'y'
+  end
+    usName = account_hash[cgi['email']][1]
+    file_hash['email'] = cgi['email']
+    file_hash['userName'] = usName
+    sess::serializeHash(file_path,file_hash)
   end
 %>
 
