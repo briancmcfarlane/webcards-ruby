@@ -33,8 +33,13 @@
         File.open("#{webcardFilePath}", "wb") {|f| Marshal.dump(newHash, f)}
         cgi.header('location'=>"index.rhtml?p=myaccount")
         
-    elsif (btn == "Edit Card")
+    elsif (btn == "Edit Card" && card != '')
+        sessionHash['cardToEdit'] = card
+        sess::serializeHash(sessionFilePath, sessionHash)
         cgi.header('location'=>"index.rhtml?p=build")
+        
+    else
+        cgi.header('location'=>"index.rhtml?p=myaccount")
     end
 
 %>

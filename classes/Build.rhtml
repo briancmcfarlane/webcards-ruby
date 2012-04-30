@@ -4,13 +4,20 @@ require 'cgi'
 
 class Build
 
-    attr_accessor :webCardFilePath, :webcardHash
+    attr_accessor :webCardFilePath, :webcardHash, :defaultTxtStyle, :defaultBordrImg, :defaultRecip, :defaultMsg, :defaultSender, :defaultId
     
     def initialize
 
         @webcardFilePath = "data/user_webcards.txt"
         @webcardFilePath.untaint
         @webcardHash = File.open("#{@webcardFilePath}", "rb") {|f| Marshal.load(f)}
+        
+        @defaultTxtStyle = "fun"
+        @defaultBordrImg = "Dentist Appt. A Border Image"
+        @defaultRecip = "This is who I'm sending the card to."
+        @defaultMsg = "This is what I want to say."
+        @defaultSender = "This is me!"
+        @defaultId = Time::new.to_i.to_s
         
     end
 
@@ -23,35 +30,53 @@ class Build
         end
     end
     
-    def createBaseHash
-        filePath = "data/user_webcards.txt"
-        filePath.untaint
-        hash = {}
-        File.open("#{filePath}", "wb") {|f| Marshal.dump(hash, f)}
-    end
-    
     def setTxtStyle(txtStyle)
-        if (txtStyle == "fun")
+        if (txtStyle == @defaultTxtStyle)
             return "checked=\"checked\""
         end
     end
     
     def setBorderImg(borderAlt)
-        if (borderAlt == "Dentist Appt. A Border Image")
+        if (borderAlt == @defaultBordrImg)
             return "imgBorder"
         end
     end
     
     def setRecip
-        return "This is who I'm sending the card to."
+        return @defaultRecip
     end
     
     def setMsg
-        return "This is what I want to say."
+        return @defaultMsg
     end
     
     def setSender
-        return "This is me!"
+        return @defaultSender
+    end
+    
+    def setId
+        return @defaultId
+    end
+    
+    def editCard(userEmail, cardToEdit, sessFilePath)
+    
+        cardDetails = @webcardHash[userEmail][cardToEdit]
+        
+        @defaultTxtStyle = cardDetails['txtstyle']
+        @defaultBordrImg = cardDetails['bordr']
+        @defaultRecip = cardDetails['recip']
+        @defaultMsg = cardDetails['msg']
+        @defaultSender = cardDetails['sender']
+        @defaultId = cardToEdit
+        
+        sessFilePath.untaint
+        
+        sessionHash = File.open("#{sessFilePath}", "rb") {|f| Marshal.load(f)}
+        
+        sessionHash::delete('cardToEdit')
+        
+        File.open("#{sessFilePath}", "wb") {|f| Marshal.dump(sessionHash, f)}
+    
     end
     
 end

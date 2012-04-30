@@ -5,8 +5,13 @@
  sess = Sessions::new
  sess::createSession
  filePath = sess::getFilePath
+ sessionHash = sess::unserializeHash(filePath)
  
  build = Build::new
+ 
+  if (sessionHash::has_key?('cardToEdit'))
+    build::editCard(sessionHash['email'],sessionHash['cardToEdit'], filePath)
+  end
  
 page.title = <<_PAGETITLE_
     WebCards: Build a WebCard
@@ -54,6 +59,7 @@ page.content = <<_PAGECONTENT_
                 <a href="#" tabindex="110"><img src="images/theme-vd-b.png" width="100" height="100" alt="Valentine's Day B Border Image" class="#{build::setBorderImg("Valentine's Day B Border Image")}" /></a>
             </div>
 
+            <input type="hidden" name="cardId" value="#{build::setId}" />
             <input type="hidden" name="bordr" id="bordr" value="" />
             <input type="hidden" name="recip" id="recip" value="#{build::setRecip}" />
             <input type="hidden" name="msg" id="msg" value="#{build::setMsg}" />

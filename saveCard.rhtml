@@ -12,9 +12,8 @@
 	ERuby::import('classes/Build.rhtml')
 	build = Build::new
 	
-	cardId = Time::new.to_i.to_s
 	if (sessionHash['auth'] == 'n')
-		sessionHash['cardId'] = cardId
+		sessionHash['cardId'] = cgi['cardId']
 		sessionHash['txtstyle'] = cgi['txtstyle']
 		sessionHash['bordr'] = cgi['bordr']
 		sessionHash['recip'] = cgi['recip']
@@ -22,16 +21,15 @@
 		sessionHash['sender'] = cgi['sender']
 		sess::serializeHash(sessionFilePath, sessionHash)
 		cgi.header('location'=>"index.rhtml?p=registration")
-	else
-		
+        
+	else 
 		email = sessionHash['email']
 		txtstyle = cgi['txtstyle']
 		bordr = cgi['bordr']
 		recip = cgi['recip']
 		msg = cgi['msg']
 		sender = cgi['sender']
-		
-		cardId = Time::new.to_i.to_s
+		cardId = cgi['cardId']
 		
 		webcardFilePath = "data/user_webcards.txt"
 		webcardFilePath.untaint
