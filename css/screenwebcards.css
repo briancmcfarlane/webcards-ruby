@@ -233,6 +233,12 @@ img
     border: 1px solid #999;
 }
 
+#editEmailAddr {
+    width: 18em;
+    background: #bbb;
+    border: 1px solid #bbb;
+}
+
 #msg
 {
     width: 18em;
