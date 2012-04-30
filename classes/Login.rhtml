@@ -1,8 +1,8 @@
 <%
-require 'digest/sha1'
+
 # pull in the CGI data
 require 'cgi'
-
+require 'digest/sha1'
 
 class Login
 
@@ -17,23 +17,31 @@ class Login
 
 
       def checkLogin(email, passwd)
-       
+        
+         errMsg = ''
         if (email !="" && passwd !="")
             account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
             if (account_hash.has_key?(email))
                 hashedPW = Digest::SHA1.hexdigest(passwd)
-				if (account_hash[email][0] == hashedPW)
+            if (account_hash[email][0] == hashedPW)
                     @loginGood = 'true'
                     return 'true'
                 end
             else
-                @errorMsg = 'Username and Password Not Found'
-                return 'false'
+                errMsg = 'Username and Password Not Found'
             end
         else
-           @errorMsg = 'Please Enter a Username and Password'
-           return 'false'
+           errMsg = 'Please Enter a Username and Password'      
         end
+
+        if(errMsg != '')
+
+          error_hash = File.open("temp_files/temp_errors.txt", "rb") {|f| Marshal.load(f)}
+          error_hash['loginError'] = errMsg
+          File.open("temp_files/temp_errors.txt", "wb") {|f| Marshal.dump(error_hash, f)}
+          return 'false'
+        end
+
       end
 
 

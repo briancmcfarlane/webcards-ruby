@@ -1,5 +1,13 @@
 <%
+ ERuby::import('classes/Sessions.rhtml')
+ ERuby::import('classes/Errorcheck.rhtml')
 
+ sess = Sessions::new
+ sess::createSession
+ errorCk = Errorcheck::new
+ errorMsg = errorCk::printLoginError
+ #errorCk::createErrorFile
+ 
 page.title = <<_PAGETITLE_
 WebCards: Login
 _PAGETITLE_
@@ -12,6 +20,8 @@ page.content = <<_PAGECONTENT_
 
 <form method="post" action="loggingin.rhtml">
 	<div>
+              #{ errorMsg }
+
 		<label for="emailadr">Email Address:</label><input type="text" size="20" name="email" id="emailadr" tabindex="100" value="" />
 			<input type="text" size="20" name="email_error" id="email_error" class="err_msg" readonly="readonly" value="" /><br />
 		<label for="passwd">Password:</label><input type="password" size="20" name="passwd" id="passwd" tabindex="110" />

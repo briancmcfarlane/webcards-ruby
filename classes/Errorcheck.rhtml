@@ -1,0 +1,45 @@
+<%
+require 'digest/sha1'
+require 'cgi'
+ERuby::import('classes/Sessions.rhtml')
+
+
+class Errorcheck
+
+          def zeroErrorFile
+            error_hash = {}
+            error_hash['loginError'] = ''
+            error_hash['nameError'] = ''
+            error_hash['emailError'] = ''
+            error_hash['pwError'] = ''
+            error_hash['conPwError'] = ''
+            File.open("temp_files/temp_errors.txt", "wb") {|f| Marshal.dump(error_hash, f)}
+          end
+
+          def checkAccounts(theEmail)
+              
+              account_hash = File.open("data/user_accounts.txt", "rb") {|f| Marshal.load(f)}
+              error_hash = File.open("temp_files/temp_errors.txt", "rb") {|f| Marshal.load(f)}
+              if (account_hash.has_key?(theEmail))
+
+                  hasAcctError = 'Email already in use'
+                  error_hash['loginError'] = hasAcctError
+                  File.open("temp_files/temp_errors.txt", "wb") {|f| Marshal.dump(error_hash, f)}
+
+                 return 'true'
+              else
+                return 'false'
+              end
+          end
+
+         
+        def printLoginError
+
+          error_hash = File.open("temp_files/temp_errors.txt", "rb") {|f| Marshal.load(f)}
+          self::zeroErrorFile
+          return   "<p class='err_msg err_summary'>" + error_hash['loginError'] + "</p>"
+    
+        end
+end
+
+%>

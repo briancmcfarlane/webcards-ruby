@@ -2,12 +2,12 @@
 <%
  require 'cgi'
  cgi = CGI::new
-
  ERuby::import('classes/Login.rhtml')
  ERuby::import('classes/Sessions.rhtml')
 
  sess = Sessions::new
  sess::createSession
+ id = sess::getCookieId
  user = Login::new
 
    answer = user::checkLogin(cgi['email'], cgi['passwd'])
